@@ -16,6 +16,7 @@ import javax.swing.JTextField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.awt.Color;
 
 public class AdicionarProduto extends JDialog {
 
@@ -69,10 +70,17 @@ public class AdicionarProduto extends JDialog {
 		btnRetornar.setBounds(120, 281, 152, 48);
 		contentPanel.add(btnRetornar);
 		
+		//label para alerta caso haja alguma valor fora do padrão
+		JLabel lblNewLabel = new JLabel("Os valores informados n\u00E3o podem estar em branco");
+		lblNewLabel.setForeground(Color.RED);
+		lblNewLabel.setBounds(120, 232, 347, 14);
+		contentPanel.add(lblNewLabel);
+		
 		JButton btnAdicionar = new JButton("Adicionar");
 		btnAdicionar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				
 				Produto novoProduto = new Produto(txtNome.getText(),Float.parseFloat(txtPreco.getText()));
 				listaProdutos.add(novoProduto);
 				dispose();
@@ -80,6 +88,33 @@ public class AdicionarProduto extends JDialog {
 		});
 		btnAdicionar.setBounds(282, 281, 152, 48);
 		contentPanel.add(btnAdicionar);
+		
+		
+	}
+	
+	/**
+	 * Método que faz o tratamento das informações que serão inseridas
+	 * @param nome	Produto selecionado no combobox
+	 * @param preco	Preço que será atualizado
+	 * @param lblAlerta	Label onde será exibida a mensagem de erro caso necessário
+	 * @return True caso padrão esteja correto e False caso não
+	 */
+	public boolean verificaCampo(String nome, String preco,JLabel lblAlerta){
+		//verifica se o campo está em branco
+		if(nome.equals("") || preco.equals("")){
+			lblAlerta.setVisible(true);
+			return false;
+		}
+		
+		//verifica se o campo pode ser convertido em um tipo float
+		try{
+			float x = Float.parseFloat(preco);
+		}catch(NumberFormatException ex){
+			lblAlerta.setText("Apenas números podem ser digitados, utilize . no lugar de ,");
+			lblAlerta.setVisible(true);
+		}
+		
+		return true;
 	}
 
 }
