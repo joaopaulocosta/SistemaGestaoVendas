@@ -1,12 +1,14 @@
 package br.com.sistemagestaovendas.vendas;
 
+import java.io.Serializable;
+
 /**
  * Classe que mantém informações sobre os produtos que serão inseridos
  * em cada comanda
  * @author Joao
  *
  */
-public class Produto {
+public class Produto implements Serializable {
 
 	private String nome;	//nome do produto
 	private float precoFixo;	//preço que será calculado pela comanda

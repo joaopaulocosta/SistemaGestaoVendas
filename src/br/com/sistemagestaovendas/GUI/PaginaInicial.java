@@ -1,6 +1,7 @@
 package br.com.sistemagestaovendas.GUI;
 
-import br.com.sistemagestaovendas.vendas.Produto;
+import br.com.sistemagestaovendas.BD.DadosProdutos;
+import br.com.sistemagestaovendas.vendas.*;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -18,11 +19,18 @@ public class PaginaInicial {
 	//lista que armazenará os produtos criados pela janela adicionar produtos
 	private ArrayList<Produto> listaProdutos = new ArrayList<Produto>();	
 	
+	private ArrayList<ProdutoComanda> listaProdutosComanda = new ArrayList<ProdutoComanda>();
+	
+	private ArrayList<Comanda> listaComandas = new ArrayList<Comanda>();
+	
+	
 	/**
 	 * Create the application.
 	 */
 	public PaginaInicial() {
 		initialize();
+		DadosProdutos carregar = new DadosProdutos(this.listaProdutos);
+		carregar.carregarDados();
 	}
 
 	/**
@@ -68,7 +76,7 @@ public class PaginaInicial {
 			}
 		});
 		btnAdicionarProduto.setFont(new Font("Tahoma", Font.BOLD, 15));
-		btnAdicionarProduto.setBounds(200, 273, 200, 40);
+		btnAdicionarProduto.setBounds(200, 222, 200, 40);
 		frmSistemaDeGestao.getContentPane().add(btnAdicionarProduto);
 		
 		JButton btnAtualizarPreco = new JButton("Atualizar Pre\u00E7o");
@@ -81,24 +89,33 @@ public class PaginaInicial {
 			}
 		});
 		btnAtualizarPreco.setFont(new Font("Tahoma", Font.BOLD, 15));
-		btnAtualizarPreco.setBounds(200, 324, 200, 40);
+		btnAtualizarPreco.setBounds(200, 273, 200, 40);
 		frmSistemaDeGestao.getContentPane().add(btnAtualizarPreco);
 		
 		JButton btnSair = new JButton("Sair");
 		btnSair.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				DadosProdutos salvar = new DadosProdutos(listaProdutos);
+				salvar.salvarDados();
 				System.exit(0);
 			}
 		});
 		btnSair.setFont(new Font("Tahoma", Font.BOLD, 15));
-		btnSair.setBounds(200, 375, 200, 40);
+		btnSair.setBounds(200, 324, 200, 40);
 		frmSistemaDeGestao.getContentPane().add(btnSair);
 		
 		JButton btnVisualizarComanda = new JButton("Visualizar Comanda");
 		btnVisualizarComanda.setFont(new Font("Tahoma", Font.BOLD, 15));
 		btnVisualizarComanda.setBounds(200, 222, 200, 40);
 		frmSistemaDeGestao.getContentPane().add(btnVisualizarComanda);
+	}
+	
+	public void gerarListaProdutoComanda(){
+		for(Produto aux :this.listaProdutos){
+			ProdutoComanda novoProdutoComanda = new ProdutoComanda(aux);
+			listaProdutosComanda.add(novoProdutoComanda);
+		}
 	}
 	
 	public void exibirPagina(){

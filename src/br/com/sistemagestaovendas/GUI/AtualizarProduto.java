@@ -159,6 +159,7 @@ public class AtualizarProduto extends JDialog {
 	public boolean verificaCampo(String nome, String preco,JLabel lblAlerta){
 		//verifica se o campo está em branco
 		if(nome.equals("") || preco.equals("")){
+			lblAlerta.setText("Os valores informados não podem estar em branco");
 			lblAlerta.setVisible(true);
 			return false;
 		}

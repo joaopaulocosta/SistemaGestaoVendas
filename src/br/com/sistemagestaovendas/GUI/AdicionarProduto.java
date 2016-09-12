@@ -71,19 +71,21 @@ public class AdicionarProduto extends JDialog {
 		contentPanel.add(btnRetornar);
 		
 		//label para alerta caso haja alguma valor fora do padrão
-		JLabel lblNewLabel = new JLabel("Os valores informados n\u00E3o podem estar em branco");
-		lblNewLabel.setForeground(Color.RED);
-		lblNewLabel.setBounds(120, 232, 347, 14);
-		contentPanel.add(lblNewLabel);
+		JLabel lblAlerta = new JLabel("Os valores informados n\u00E3o podem estar em branco");
+		lblAlerta.setForeground(Color.RED);
+		lblAlerta.setBounds(120, 232, 347, 14);
+		lblAlerta.setVisible(false);
+		contentPanel.add(lblAlerta);
 		
 		JButton btnAdicionar = new JButton("Adicionar");
 		btnAdicionar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				
-				Produto novoProduto = new Produto(txtNome.getText(),Float.parseFloat(txtPreco.getText()));
-				listaProdutos.add(novoProduto);
-				dispose();
+				if(verificaCampo(txtNome.getText(), txtPreco.getText(), lblAlerta)){
+					Produto novoProduto = new Produto(txtNome.getText(),Float.parseFloat(txtPreco.getText()));
+					listaProdutos.add(novoProduto);
+					dispose();
+				}
 			}
 		});
 		btnAdicionar.setBounds(282, 281, 152, 48);
@@ -102,6 +104,7 @@ public class AdicionarProduto extends JDialog {
 	public boolean verificaCampo(String nome, String preco,JLabel lblAlerta){
 		//verifica se o campo está em branco
 		if(nome.equals("") || preco.equals("")){
+			lblAlerta.setText("Os valores informados não podem estar em branco");
 			lblAlerta.setVisible(true);
 			return false;
 		}

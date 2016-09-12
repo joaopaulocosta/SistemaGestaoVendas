@@ -29,23 +29,10 @@ public class LancarComanda extends JDialog {
 	private JTextField txtRefri2000;
 	private JTextField txtAgua1500;
 	private JTextField txtOutros;
+	private JTextField textField;
+	private JTextField textField_1;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		try {
-			LancarComanda dialog = new LancarComanda();
-			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-			dialog.setVisible(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	/**
-	 * Create the dialog.
-	 */
+	
 	public LancarComanda() {
 		setTitle("Lan\u00E7amento de Comanda");
 		setBounds(100, 100, 614, 780);
@@ -152,7 +139,7 @@ public class LancarComanda extends JDialog {
 		{
 			JLabel lblOutros = new JLabel("Outros:");
 			lblOutros.setFont(new Font("Tahoma", Font.PLAIN, 18));
-			lblOutros.setBounds(31, 507, 164, 30);
+			lblOutros.setBounds(31, 597, 164, 30);
 			contentPanel.add(lblOutros);
 		}
 		{
@@ -212,18 +199,18 @@ public class LancarComanda extends JDialog {
 		{
 			txtOutros = new JTextField();
 			txtOutros.setColumns(10);
-			txtOutros.setBounds(179, 511, 146, 28);
+			txtOutros.setBounds(179, 601, 146, 28);
 			contentPanel.add(txtOutros);
 		}
 		{
 			JLabel lblQuantOutros = new JLabel("Quantidade: 0");
 			lblQuantOutros.setFont(new Font("Tahoma", Font.PLAIN, 18));
-			lblQuantOutros.setBounds(335, 507, 164, 30);
+			lblQuantOutros.setBounds(335, 597, 164, 30);
 			contentPanel.add(lblQuantOutros);
 		}
 		{
 			JComboBox cmboxOutros = new JComboBox();
-			cmboxOutros.setBounds(470, 507, 118, 28);
+			cmboxOutros.setBounds(470, 597, 118, 28);
 			contentPanel.add(cmboxOutros);
 		}
 		{
@@ -242,6 +229,27 @@ public class LancarComanda extends JDialog {
 			btRegistrar.setBounds(311, 666, 152, 48);
 			contentPanel.add(btRegistrar);
 		}
+		
+		JLabel lblMarmitex = new JLabel("Marmitex:");
+		lblMarmitex.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblMarmitex.setBounds(31, 507, 164, 30);
+		contentPanel.add(lblMarmitex);
+		
+		textField = new JTextField();
+		textField.setColumns(10);
+		textField.setBounds(179, 511, 146, 28);
+		contentPanel.add(textField);
+		{
+			textField_1 = new JTextField();
+			textField_1.setColumns(10);
+			textField_1.setBounds(179, 552, 146, 28);
+			contentPanel.add(textField_1);
+		}
+		{
+			JLabel lblMiniMarmitex = new JLabel("Mini-Marmitex:");
+			lblMiniMarmitex.setFont(new Font("Tahoma", Font.PLAIN, 18));
+			lblMiniMarmitex.setBounds(31, 548, 164, 30);
+			contentPanel.add(lblMiniMarmitex);
+		}
 	}
-
 }
