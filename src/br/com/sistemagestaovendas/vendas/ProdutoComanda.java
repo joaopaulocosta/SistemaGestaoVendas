@@ -18,5 +18,9 @@ public class ProdutoComanda {
 	public int getQuantidade() {
 		return this.quantidade;
 	}
-
+	
+	public Produto getProduto(){
+		return produto;
+	}
+	
 }

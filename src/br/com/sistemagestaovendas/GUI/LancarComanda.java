@@ -1,6 +1,7 @@
 package br.com.sistemagestaovendas.GUI;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 
 import javax.swing.JButton;
@@ -14,14 +15,24 @@ import javax.swing.JTextField;
 import javax.swing.JComboBox;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+
+import br.com.sistemagestaovendas.vendas.ProdutoComanda;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class LancarComanda extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtRefeicao;
 	private JTextField txtAgua500;
-	private JTextField txtCerveja;
-	private JTextField txtPinga;
+	private JTextField txtCervejaSkolBrahma;
+	private JTextField txtPingaLiguritaCristalina;
 	private JTextField txtRefri290;
 	private JTextField txtRefri600;
 	private JTextField txtRefri1000;
@@ -29,17 +40,32 @@ public class LancarComanda extends JDialog {
 	private JTextField txtRefri2000;
 	private JTextField txtAgua1500;
 	private JTextField txtOutros;
-	private JTextField textField;
-	private JTextField textField_1;
-
+	private JTextField txtMarmitex;
+	private JTextField txtMiniMarmitex;
+	private JLabel lblValorTotalReal;
+	private JLabel lblAlerta;
 	
-	public LancarComanda() {
+	private int contRefeicoes = 0;
+	private int contOutros = 0;
+	private float valorTotal = 0;
+	private JTextField txtCervejaOriginal;
+	private JTextField txtPingaFarrista;
+	
+	public LancarComanda(ArrayList<ProdutoComanda> listaProdutosComanda) {
 		setTitle("Lan\u00E7amento de Comanda");
 		setBounds(100, 100, 614, 780);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		contentPanel.setLayout(null);
+		
+		lblAlerta = new JLabel("Apenas n\u00FAmeros podem ser digitados, utilize . no lugar de ,");
+		lblAlerta.setForeground(Color.RED);
+		lblAlerta.setFont(new Font("Tahoma", Font.PLAIN, 11));
+		lblAlerta.setBounds(130, 638, 424, 30);
+		lblAlerta.setVisible(false);
+		contentPanel.add(lblAlerta);
+		
 		{
 			JLabel labelTitulo = new JLabel("Lan\u00E7amento de Comanda");
 			labelTitulo.setBounds(172, 11, 254, 25);
@@ -59,29 +85,73 @@ public class LancarComanda extends JDialog {
 			lblValorTotal.setBounds(293, 47, 152, 30);
 			contentPanel.add(lblValorTotal);
 		}
+		
+		lblValorTotalReal = new JLabel("R$ 0");
+		lblValorTotalReal.setFont(new Font("Tahoma", Font.BOLD, 18));
+		lblValorTotalReal.setBounds(402, 47, 152, 30);
+		contentPanel.add(lblValorTotalReal);
+		
 		{
 			JLabel lblRefeicao = new JLabel("Refei\u00E7\u00E3o:");
 			lblRefeicao.setFont(new Font("Tahoma", Font.PLAIN, 18));
 			lblRefeicao.setBounds(31, 88, 164, 30);
 			contentPanel.add(lblRefeicao);
 		}
+		
+		JButton btnMaisRefeicao = new JButton("+");
+		btnMaisRefeicao.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				txtRefeicao.setText("");
+				txtRefeicao.requestFocus();
+			}
+			
+		});
+		btnMaisRefeicao.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				txtRefeicao.setText("");
+				txtRefeicao.requestFocus();
+			}
+		});
+		btnMaisRefeicao.setFont(new Font("Tahoma", Font.BOLD, 13));
+		btnMaisRefeicao.setBounds(332, 88, 48, 30);
+		contentPanel.add(btnMaisRefeicao);
+		
+		JComboBox cmboxRefeicoes = new JComboBox();
+		cmboxRefeicoes.setBounds(484, 88, 104, 28);
+		contentPanel.add(cmboxRefeicoes);
+	
+	
+		JLabel lblQuantRefeicoes = new JLabel("Quant: 0");
+		lblQuantRefeicoes.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblQuantRefeicoes.setBounds(390, 88, 164, 30);
+		contentPanel.add(lblQuantRefeicoes);
+		
 		{
 			txtRefeicao = new JTextField();
+			txtRefeicao.addFocusListener(new FocusAdapter() {
+				//evento para processar refeição
+				@Override
+				public void focusLost(FocusEvent arg0) {
+					for(ProdutoComanda aux: listaProdutosComanda){
+						if(aux.getProduto().getNome().equals("Refeição")){
+							aux.setQuantidade(aux.getQuantidade() + 1);
+						}
+					}
+					if(tratarEntrada(txtRefeicao)){
+						lblQuantRefeicoes.setText("Quant: " + (++contRefeicoes));
+						cmboxRefeicoes.addItem(txtRefeicao.getText());
+						valorTotal += Float.parseFloat(txtRefeicao.getText());
+						lblValorTotalReal.setText("R$ " + valorTotal);
+					}
+				}
+			});
 			txtRefeicao.setBounds(179, 88, 146, 28);
 			contentPanel.add(txtRefeicao);
 			txtRefeicao.setColumns(10);
 		}
-		{
-			JComboBox cmboxRefeicoes = new JComboBox();
-			cmboxRefeicoes.setBounds(470, 88, 118, 28);
-			contentPanel.add(cmboxRefeicoes);
-		}
-		{
-			JLabel lblQuantRefeicoes = new JLabel("Quantidade: 0");
-			lblQuantRefeicoes.setFont(new Font("Tahoma", Font.PLAIN, 18));
-			lblQuantRefeicoes.setBounds(335, 88, 164, 30);
-			contentPanel.add(lblQuantRefeicoes);
-		}
+		
 		{
 			JLabel lblCerveja = new JLabel("Cerveja: ");
 			lblCerveja.setFont(new Font("Tahoma", Font.PLAIN, 18));
@@ -144,76 +214,202 @@ public class LancarComanda extends JDialog {
 		}
 		{
 			txtAgua500 = new JTextField();
+			txtAgua500.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusGained(FocusEvent e) {
+					trataEventosFocus(listaProdutosComanda, "Agua M. 500ml", txtAgua500, false);
+				}
+				@Override
+				public void focusLost(FocusEvent e) {
+					trataEventosFocus(listaProdutosComanda, "Agua M. 500ml", txtAgua500, true);
+				}
+			});
 			txtAgua500.setColumns(10);
 			txtAgua500.setBounds(179, 429, 146, 28);
 			contentPanel.add(txtAgua500);
 		}
 		{
-			txtCerveja = new JTextField();
-			txtCerveja.setColumns(10);
-			txtCerveja.setBounds(179, 140, 146, 28);
-			contentPanel.add(txtCerveja);
+			txtCervejaSkolBrahma = new JTextField();
+			txtCervejaSkolBrahma.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent arg0) {
+					trataEventosFocus(listaProdutosComanda, "Cerveja Skol e Brahma", txtCervejaSkolBrahma, true);		
+				}
+				@Override
+				public void focusGained(FocusEvent e) {
+					trataEventosFocus(listaProdutosComanda, "Cerveja Skol e Brahma", txtCervejaSkolBrahma, false);
+				}
+			});
+			txtCervejaSkolBrahma.setColumns(10);
+			txtCervejaSkolBrahma.setBounds(313, 140, 67, 28);
+			contentPanel.add(txtCervejaSkolBrahma);
 		}
 		{
-			txtPinga = new JTextField();
-			txtPinga.setColumns(10);
-			txtPinga.setBounds(179, 181, 146, 28);
-			contentPanel.add(txtPinga);
+			txtPingaLiguritaCristalina = new JTextField();
+			txtPingaLiguritaCristalina.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusGained(FocusEvent e) {
+					trataEventosFocus(listaProdutosComanda, "Pinga Ligurita e Cristalina", txtPingaLiguritaCristalina, false);
+				}
+				@Override
+				public void focusLost(FocusEvent e) {
+					trataEventosFocus(listaProdutosComanda, "Pinga Ligurita e Cristalina", txtPingaLiguritaCristalina, true);
+
+				}
+			});
+			txtPingaLiguritaCristalina.setColumns(10);
+			txtPingaLiguritaCristalina.setBounds(313, 181, 67, 28);
+			contentPanel.add(txtPingaLiguritaCristalina);
 		}
 		{
 			txtRefri290 = new JTextField();
+			txtRefri290.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusGained(FocusEvent e) {
+					trataEventosFocus(listaProdutosComanda, "Refrig 290ml", txtRefri290, false);
+				}
+				@Override
+				public void focusLost(FocusEvent e) {
+					trataEventosFocus(listaProdutosComanda, "Refrig 290ml", txtRefri290, true);
+				}
+			});
 			txtRefri290.setColumns(10);
 			txtRefri290.setBounds(179, 222, 146, 28);
 			contentPanel.add(txtRefri290);
 		}
 		{
 			txtRefri600 = new JTextField();
+			txtRefri600.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusGained(FocusEvent e) {
+					trataEventosFocus(listaProdutosComanda, "Refrig 600ml", txtRefri600, false);
+				}
+				@Override
+				public void focusLost(FocusEvent e) {
+					trataEventosFocus(listaProdutosComanda, "Refrig 600ml", txtRefri600, true);
+				}
+			});
 			txtRefri600.setColumns(10);
 			txtRefri600.setBounds(179, 263, 146, 28);
 			contentPanel.add(txtRefri600);
 		}
 		{
 			txtRefri1000 = new JTextField();
+			txtRefri1000.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusGained(FocusEvent e) {
+					trataEventosFocus(listaProdutosComanda, "Refrig 1000ml", txtRefri1000, false);
+				}
+				@Override
+				public void focusLost(FocusEvent e) {
+					trataEventosFocus(listaProdutosComanda, "Refrig 1000ml", txtRefri1000, true);
+				}
+			});
 			txtRefri1000.setColumns(10);
 			txtRefri1000.setBounds(179, 306, 146, 28);
 			contentPanel.add(txtRefri1000);
 		}
 		{
 			txtRefri1250 = new JTextField();
+			txtRefri1250.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusGained(FocusEvent e) {
+					trataEventosFocus(listaProdutosComanda, "Refrig 1250ml", txtRefri1250, false);
+				}
+				@Override
+				public void focusLost(FocusEvent e) {
+					trataEventosFocus(listaProdutosComanda, "Refrig 1250ml", txtRefri1250, true);
+				}
+			});
 			txtRefri1250.setColumns(10);
 			txtRefri1250.setBounds(179, 347, 146, 28);
 			contentPanel.add(txtRefri1250);
 		}
 		{
 			txtRefri2000 = new JTextField();
+			txtRefri2000.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusGained(FocusEvent e) {
+					trataEventosFocus(listaProdutosComanda, "Refrig 2000ml", txtRefri2000, false);
+				}
+				@Override
+				public void focusLost(FocusEvent e) {
+					trataEventosFocus(listaProdutosComanda, "Refrig 2000ml", txtRefri2000, true);
+				}
+			});
 			txtRefri2000.setColumns(10);
 			txtRefri2000.setBounds(179, 388, 146, 28);
 			contentPanel.add(txtRefri2000);
 		}
 		{
 			txtAgua1500 = new JTextField();
+			txtAgua1500.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusGained(FocusEvent e) {
+					trataEventosFocus(listaProdutosComanda, "Agua M. 1500ml", txtAgua1500, false);
+				}
+				@Override
+				public void focusLost(FocusEvent e) {
+					trataEventosFocus(listaProdutosComanda, "Agua M. 1500ml", txtAgua1500, true);
+				}
+			});
 			txtAgua1500.setColumns(10);
 			txtAgua1500.setBounds(179, 470, 146, 28);
 			contentPanel.add(txtAgua1500);
 		}
-		{
-			txtOutros = new JTextField();
-			txtOutros.setColumns(10);
-			txtOutros.setBounds(179, 601, 146, 28);
-			contentPanel.add(txtOutros);
-		}
-		{
-			JLabel lblQuantOutros = new JLabel("Quantidade: 0");
-			lblQuantOutros.setFont(new Font("Tahoma", Font.PLAIN, 18));
-			lblQuantOutros.setBounds(335, 597, 164, 30);
-			contentPanel.add(lblQuantOutros);
-		}
-		{
-			JComboBox cmboxOutros = new JComboBox();
-			cmboxOutros.setBounds(470, 597, 118, 28);
-			contentPanel.add(cmboxOutros);
-		}
-		{
+		
+		JButton btnMaisOutros = new JButton("+");
+		btnMaisOutros.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				txtOutros.setText("");
+				txtOutros.requestFocus();
+			}
+		});
+		btnMaisOutros.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				txtOutros.setText("");
+				txtOutros.requestFocus();
+			}
+		});
+		btnMaisOutros.setFont(new Font("Tahoma", Font.BOLD, 13));
+		btnMaisOutros.setBounds(332, 601, 48, 30);
+		contentPanel.add(btnMaisOutros);
+		
+		JLabel lblQuantOutros = new JLabel("Quant: 0");
+		lblQuantOutros.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblQuantOutros.setBounds(390, 601, 164, 30);
+		contentPanel.add(lblQuantOutros);
+		
+		JComboBox cmboxOutros = new JComboBox();
+		cmboxOutros.setBounds(484, 601, 104, 28);
+		contentPanel.add(cmboxOutros);
+		
+		txtOutros = new JTextField();
+		txtOutros.addFocusListener(new FocusAdapter() {
+			//evento para processar refeição
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				for(ProdutoComanda aux: listaProdutosComanda){
+					if(aux.getProduto().getNome().equals("Outros")){
+						aux.setQuantidade(aux.getQuantidade() + 1);
+					}
+				}
+				if(tratarEntrada(txtOutros)){
+					lblQuantOutros.setText("Quant: " + (++contOutros));
+					cmboxOutros.addItem(txtOutros.getText());
+					valorTotal += Float.parseFloat(txtOutros.getText());
+					lblValorTotalReal.setText("R$ " + valorTotal);
+				}
+			}
+		});
+		txtOutros.setColumns(10);
+		txtOutros.setBounds(179, 601, 146, 28);
+		contentPanel.add(txtOutros);
+		
+		{	
+			//fechar a janela
 			JButton button = new JButton("Retornar");
 			button.addMouseListener(new MouseAdapter() {
 				@Override
@@ -235,21 +431,178 @@ public class LancarComanda extends JDialog {
 		lblMarmitex.setBounds(31, 507, 164, 30);
 		contentPanel.add(lblMarmitex);
 		
-		textField = new JTextField();
-		textField.setColumns(10);
-		textField.setBounds(179, 511, 146, 28);
-		contentPanel.add(textField);
+		txtMarmitex = new JTextField();
+		txtMarmitex.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusGained(FocusEvent e) {
+				trataEventosFocus(listaProdutosComanda, "Marmitex", txtMarmitex, false);
+			}
+			@Override
+			public void focusLost(FocusEvent e) {
+				trataEventosFocus(listaProdutosComanda, "Marmitex", txtMarmitex, true);
+			}
+		});
+		txtMarmitex.setColumns(10);
+		txtMarmitex.setBounds(179, 511, 146, 28);
+		contentPanel.add(txtMarmitex);
 		{
-			textField_1 = new JTextField();
-			textField_1.setColumns(10);
-			textField_1.setBounds(179, 552, 146, 28);
-			contentPanel.add(textField_1);
+			txtMiniMarmitex = new JTextField();
+			txtMiniMarmitex.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusGained(FocusEvent e) {
+					trataEventosFocus(listaProdutosComanda, "Mini-Marmitex", txtMiniMarmitex, false);
+				}
+				@Override
+				public void focusLost(FocusEvent e) {
+					trataEventosFocus(listaProdutosComanda, "Mini-Marmitex", txtMiniMarmitex, true);
+				}
+			});
+			txtMiniMarmitex.setColumns(10);
+			txtMiniMarmitex.setBounds(179, 552, 146, 28);
+			contentPanel.add(txtMiniMarmitex);
 		}
 		{
 			JLabel lblMiniMarmitex = new JLabel("Mini-Marmitex:");
 			lblMiniMarmitex.setFont(new Font("Tahoma", Font.PLAIN, 18));
 			lblMiniMarmitex.setBounds(31, 548, 164, 30);
 			contentPanel.add(lblMiniMarmitex);
+		}
+		{	
+
+			//pegando data atual e exibindo
+			Date data = new Date();	
+			JLabel lblDataReal = new JLabel((data.getDate()) + "/" + (data.getMonth()+1) +
+					"/" + (data.getYear() + 1900)); 
+			
+					
+			lblDataReal.setFont(new Font("Tahoma", Font.PLAIN, 18));
+			lblDataReal.setBounds(95, 47, 164, 30);
+			
+			contentPanel.add(lblDataReal);
+		}
+		{
+			JLabel lblSkolbrahma = new JLabel("Skol/Brahma:");
+			lblSkolbrahma.setFont(new Font("Tahoma", Font.PLAIN, 18));
+			lblSkolbrahma.setBounds(189, 136, 164, 30);
+			contentPanel.add(lblSkolbrahma);
+		}
+		{
+			JLabel lblOriginal = new JLabel("Original: ");
+			lblOriginal.setFont(new Font("Tahoma", Font.PLAIN, 18));
+			lblOriginal.setBounds(402, 136, 72, 30);
+			contentPanel.add(lblOriginal);
+		}
+		{
+			txtCervejaOriginal = new JTextField();
+			txtCervejaOriginal.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusGained(FocusEvent e) {
+					trataEventosFocus(listaProdutosComanda, "Cerveja Original",
+							txtCervejaOriginal, false);
+				}
+				@Override
+				public void focusLost(FocusEvent e) {
+					trataEventosFocus(listaProdutosComanda, "Cerveja Original",
+							txtCervejaOriginal, true);
+				}
+			});
+			txtCervejaOriginal.setColumns(10);
+			txtCervejaOriginal.setBounds(484, 140, 67, 28);
+			contentPanel.add(txtCervejaOriginal);
+		}
+		{
+			JLabel lblPingaLiguritaCristalina = new JLabel("Ligurita/Cristal:");
+			lblPingaLiguritaCristalina.setFont(new Font("Tahoma", Font.PLAIN, 18));
+			lblPingaLiguritaCristalina.setBounds(189, 177, 164, 30);
+			contentPanel.add(lblPingaLiguritaCristalina);
+		}
+		{
+			JLabel lblPingaFarrista = new JLabel("Farrista: ");
+			lblPingaFarrista.setFont(new Font("Tahoma", Font.PLAIN, 18));
+			lblPingaFarrista.setBounds(402, 177, 72, 30);
+			contentPanel.add(lblPingaFarrista);
+		}
+		{
+			txtPingaFarrista = new JTextField();
+			txtPingaFarrista.addFocusListener(new FocusAdapter() {
+				@Override
+				public void focusGained(FocusEvent e) {
+					trataEventosFocus(listaProdutosComanda, "Pinga Farrista",
+							txtPingaFarrista, false);
+				}
+				@Override
+				public void focusLost(FocusEvent e) {
+					trataEventosFocus(listaProdutosComanda, "Pinga Farrista",
+							txtPingaFarrista, true);
+				}
+			});
+			txtPingaFarrista.setColumns(10);
+			txtPingaFarrista.setBounds(484, 181, 67, 28);
+			contentPanel.add(txtPingaFarrista);
+		}
+		
+
+
+		
+		
+	}
+	
+	public boolean tratarEntrada(JTextField campo){
+		
+		String entrada = campo.getText();
+		
+		//verifica se o campo pode ser convertido em um tipo float
+		try{
+			
+			float x = Float.parseFloat(entrada);
+			lblAlerta.setVisible(false);
+			return true;
+		}catch(NumberFormatException ex){
+			if(!entrada.equals("")){
+				lblAlerta.setText("Apenas números podem ser digitados, utilize . no lugar de ,");
+				lblAlerta.setVisible(true);
+				campo.setText("");
+				campo.requestFocus();
+				return false;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Método que trata os eventos Focus lost e gained de maneira generalizada
+	 * @param listaProdutosComanda	lista de ProdutosComanda	
+	 * @param nomeProduto	Nome do produto que tera o text Field tratado
+	 * @param campo	text Field que será tratado	
+	 * @param flagLost	flag que informa se é um evento lost focus ou gained
+	 */
+	public void trataEventosFocus(ArrayList<ProdutoComanda> listaProdutosComanda, 
+			String nomeProduto, JTextField campo, boolean flagLost){
+		
+		//trata evento gained focus
+		if(!flagLost){
+			for(ProdutoComanda aux: listaProdutosComanda){
+				if(aux.getProduto().getNome().equals(nomeProduto)){
+						if(!campo.getText().equals("")){
+							valorTotal -= (Integer.parseInt(campo.getText()) 
+									* aux.getProduto().getPrecoFixo());
+							lblValorTotalReal.setText("R$ " + valorTotal);
+							campo.setText("");
+						}
+				}
+			}
+		}
+		//trata evento lost focus
+		else{
+			if(tratarEntrada(campo)){
+				for(ProdutoComanda aux: listaProdutosComanda){
+					if(aux.getProduto().getNome().equals(nomeProduto)){
+							valorTotal += (Integer.parseInt(campo.getText()) 
+									* aux.getProduto().getPrecoFixo());
+							lblValorTotalReal.setText("R$ " + valorTotal);
+					}
+				}
+			}
 		}
 	}
 }

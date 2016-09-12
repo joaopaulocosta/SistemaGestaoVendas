@@ -54,7 +54,8 @@ public class PaginaInicial {
 		btnLancarComanda.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				LancarComanda lancaComanda = new LancarComanda();	//abri pagina para adicionar produto
+				gerarListaProdutoComanda();
+				LancarComanda lancaComanda = new LancarComanda(listaProdutosComanda);	//abri pagina para adicionar produto
 				lancaComanda.setVisible(true);
 			}
 		});

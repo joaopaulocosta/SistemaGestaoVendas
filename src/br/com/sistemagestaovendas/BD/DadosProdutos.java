@@ -58,7 +58,6 @@ public class DadosProdutos {
 				//gravando dados de alunos no arquivo binario
 				objectOut.writeInt(this.listaProdutos.size());
 				for(Produto produto: this.listaProdutos){
-					System.out.print(produto.getNome() + " - " + produto.getPrecoFixo());
 					objectOut.writeObject(produto);
 				}	
 				objectOut. close();
