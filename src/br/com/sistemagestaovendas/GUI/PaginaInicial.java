@@ -55,10 +55,22 @@ public class PaginaInicial {
 		//Inicializando o frame da tela Inicial
 		frmSistemaDeGestao = new JFrame();
 		frmSistemaDeGestao.setTitle("Sistema de Gest\u00E3o de Vendas");
-		frmSistemaDeGestao.setBounds(100, 100, 601, 503);
+		frmSistemaDeGestao.setBounds(400, 100, 601, 503);
 		frmSistemaDeGestao.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmSistemaDeGestao.getContentPane().setLayout(null);
 		
+		//caso a janela seja fechada os dados serão salvos
+		frmSistemaDeGestao.addWindowListener(new java.awt.event.WindowAdapter() {
+		    @Override
+		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+		    	DadosProdutos salvar = new DadosProdutos(listaProdutos);
+				salvar.salvarDados();
+				
+				DadosComandas carregarComandas = new DadosComandas(listaComandas);
+				carregarComandas.salvarDados();
+				System.exit(0);
+		    }
+		});
 		//Titulo Principal
 		JLabel labelTitulo = new JLabel("Sistema de Gest\u00E3o de Vendas");
 		labelTitulo.setBounds(-11, 11, 607, 71);

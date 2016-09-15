@@ -77,7 +77,7 @@ public class LancarComanda extends JDialog {
 		Comanda novaComanda = new Comanda(listaProdutosComanda);
 		
 		setTitle("Lan\u00E7amento de Comanda");
-		setBounds(100, 100, 614, 780);
+		setBounds(300, 50, 613, 685);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -87,7 +87,7 @@ public class LancarComanda extends JDialog {
 		lblAlerta.setHorizontalAlignment(SwingConstants.CENTER);
 		lblAlerta.setForeground(Color.RED);
 		lblAlerta.setFont(new Font("Tahoma", Font.BOLD, 11));
-		lblAlerta.setBounds(31, 632, 557, 36);
+		lblAlerta.setBounds(31, 548, 557, 36);
 		lblAlerta.setVisible(false);
 		contentPanel.add(lblAlerta);
 		
@@ -178,7 +178,7 @@ public class LancarComanda extends JDialog {
 					}
 				}
 			});
-			txtRefeicao.setBounds(179, 88, 146, 28);
+			txtRefeicao.setBounds(188, 88, 137, 28);
 			contentPanel.add(txtRefeicao);
 			txtRefeicao.setColumns(10);
 		}
@@ -196,51 +196,51 @@ public class LancarComanda extends JDialog {
 			contentPanel.add(lblPinga);
 		}
 		{
-			JLabel lblRefri290ml = new JLabel("Refri 290ml: ");
+			JLabel lblRefri290ml = new JLabel("290ml: ");
 			lblRefri290ml.setFont(new Font("Tahoma", Font.PLAIN, 18));
-			lblRefri290ml.setBounds(31, 218, 164, 30);
+			lblRefri290ml.setBounds(189, 218, 111, 30);
 			contentPanel.add(lblRefri290ml);
 		}
 		{
-			JLabel lblRefri600ml = new JLabel("Refri 600ml: ");
+			JLabel lblRefri600ml = new JLabel("600ml: ");
 			lblRefri600ml.setFont(new Font("Tahoma", Font.PLAIN, 18));
-			lblRefri600ml.setBounds(31, 259, 164, 30);
+			lblRefri600ml.setBounds(400, 222, 72, 30);
 			contentPanel.add(lblRefri600ml);
 		}
 		{
-			JLabel lblRefri1000ml = new JLabel("Refri 1000ml: ");
+			JLabel lblRefri1000ml = new JLabel("1000ml: ");
 			lblRefri1000ml.setFont(new Font("Tahoma", Font.PLAIN, 18));
-			lblRefri1000ml.setBounds(31, 302, 164, 30);
+			lblRefri1000ml.setBounds(188, 259, 137, 30);
 			contentPanel.add(lblRefri1000ml);
 		}
 		{
-			JLabel lblRefri1250ml = new JLabel("Refri 1250ml: ");
+			JLabel lblRefri1250ml = new JLabel("1250ml: ");
 			lblRefri1250ml.setFont(new Font("Tahoma", Font.PLAIN, 18));
-			lblRefri1250ml.setBounds(31, 343, 164, 30);
+			lblRefri1250ml.setBounds(402, 259, 72, 30);
 			contentPanel.add(lblRefri1250ml);
 		}
 		{
-			JLabel lblRefri2000ml = new JLabel("Refri 2000ml: ");
+			JLabel lblRefri2000ml = new JLabel("2000ml: ");
 			lblRefri2000ml.setFont(new Font("Tahoma", Font.PLAIN, 18));
-			lblRefri2000ml.setBounds(31, 384, 164, 30);
+			lblRefri2000ml.setBounds(189, 300, 164, 30);
 			contentPanel.add(lblRefri2000ml);
 		}
 		{
 			JLabel lblAguaMin500ml = new JLabel("Agua M. 500ml: ");
 			lblAguaMin500ml.setFont(new Font("Tahoma", Font.PLAIN, 18));
-			lblAguaMin500ml.setBounds(31, 425, 164, 30);
+			lblAguaMin500ml.setBounds(31, 341, 164, 30);
 			contentPanel.add(lblAguaMin500ml);
 		}
 		{
 			JLabel lblAguaMin1500ml = new JLabel("Agua M. 1500ml: ");
 			lblAguaMin1500ml.setFont(new Font("Tahoma", Font.PLAIN, 18));
-			lblAguaMin1500ml.setBounds(31, 466, 164, 30);
+			lblAguaMin1500ml.setBounds(31, 382, 164, 30);
 			contentPanel.add(lblAguaMin1500ml);
 		}
 		{
 			JLabel lblOutros = new JLabel("Outros:");
 			lblOutros.setFont(new Font("Tahoma", Font.PLAIN, 18));
-			lblOutros.setBounds(31, 597, 164, 30);
+			lblOutros.setBounds(31, 513, 164, 30);
 			contentPanel.add(lblOutros);
 		}
 		{
@@ -256,7 +256,7 @@ public class LancarComanda extends JDialog {
 				}
 			});
 			txtAgua500.setColumns(10);
-			txtAgua500.setBounds(179, 429, 146, 28);
+			txtAgua500.setBounds(179, 345, 146, 28);
 			contentPanel.add(txtAgua500);
 		}
 		{
@@ -305,7 +305,7 @@ public class LancarComanda extends JDialog {
 				}
 			});
 			txtRefri290.setColumns(10);
-			txtRefri290.setBounds(179, 222, 146, 28);
+			txtRefri290.setBounds(313, 222, 67, 28);
 			contentPanel.add(txtRefri290);
 		}
 		{
@@ -321,7 +321,7 @@ public class LancarComanda extends JDialog {
 				}
 			});
 			txtRefri600.setColumns(10);
-			txtRefri600.setBounds(179, 263, 146, 28);
+			txtRefri600.setBounds(484, 222, 67, 28);
 			contentPanel.add(txtRefri600);
 		}
 		{
@@ -337,7 +337,7 @@ public class LancarComanda extends JDialog {
 				}
 			});
 			txtRefri1000.setColumns(10);
-			txtRefri1000.setBounds(179, 306, 146, 28);
+			txtRefri1000.setBounds(313, 263, 67, 28);
 			contentPanel.add(txtRefri1000);
 		}
 		{
@@ -353,7 +353,7 @@ public class LancarComanda extends JDialog {
 				}
 			});
 			txtRefri1250.setColumns(10);
-			txtRefri1250.setBounds(179, 347, 146, 28);
+			txtRefri1250.setBounds(484, 263, 67, 28);
 			contentPanel.add(txtRefri1250);
 		}
 		{
@@ -369,7 +369,7 @@ public class LancarComanda extends JDialog {
 				}
 			});
 			txtRefri2000.setColumns(10);
-			txtRefri2000.setBounds(179, 388, 146, 28);
+			txtRefri2000.setBounds(313, 304, 67, 28);
 			contentPanel.add(txtRefri2000);
 		}
 		{
@@ -385,7 +385,7 @@ public class LancarComanda extends JDialog {
 				}
 			});
 			txtAgua1500.setColumns(10);
-			txtAgua1500.setBounds(179, 470, 146, 28);
+			txtAgua1500.setBounds(179, 386, 146, 28);
 			contentPanel.add(txtAgua1500);
 		}
 		
@@ -405,16 +405,16 @@ public class LancarComanda extends JDialog {
 			}
 		});
 		btnMaisOutros.setFont(new Font("Tahoma", Font.BOLD, 13));
-		btnMaisOutros.setBounds(332, 601, 48, 30);
+		btnMaisOutros.setBounds(332, 517, 48, 30);
 		contentPanel.add(btnMaisOutros);
 		
 		JLabel lblQuantOutros = new JLabel("Quant: 0");
 		lblQuantOutros.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblQuantOutros.setBounds(390, 601, 164, 30);
+		lblQuantOutros.setBounds(390, 517, 164, 30);
 		contentPanel.add(lblQuantOutros);
 		
 		JComboBox cmboxOutros = new JComboBox();
-		cmboxOutros.setBounds(484, 601, 104, 28);
+		cmboxOutros.setBounds(484, 517, 104, 28);
 		contentPanel.add(cmboxOutros);
 		
 		txtOutros = new JTextField();
@@ -442,7 +442,7 @@ public class LancarComanda extends JDialog {
 			}
 		});
 		txtOutros.setColumns(10);
-		txtOutros.setBounds(179, 601, 146, 28);
+		txtOutros.setBounds(179, 517, 146, 28);
 		contentPanel.add(txtOutros);
 		
 		{	
@@ -462,7 +462,7 @@ public class LancarComanda extends JDialog {
 					dispose();
 				}
 			});
-			button.setBounds(149, 666, 152, 48);
+			button.setBounds(149, 582, 152, 48);
 			contentPanel.add(button);
 		}
 		{
@@ -500,13 +500,13 @@ public class LancarComanda extends JDialog {
 					}
 				}
 			});
-			btRegistrar.setBounds(311, 666, 152, 48);
+			btRegistrar.setBounds(311, 582, 152, 48);
 			contentPanel.add(btRegistrar);
 		}
 		
 		JLabel lblMarmitex = new JLabel("Marmitex:");
 		lblMarmitex.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		lblMarmitex.setBounds(31, 507, 164, 30);
+		lblMarmitex.setBounds(31, 423, 164, 30);
 		contentPanel.add(lblMarmitex);
 		
 		txtMarmitex = new JTextField();
@@ -521,7 +521,7 @@ public class LancarComanda extends JDialog {
 			}
 		});
 		txtMarmitex.setColumns(10);
-		txtMarmitex.setBounds(179, 511, 146, 28);
+		txtMarmitex.setBounds(179, 427, 146, 28);
 		contentPanel.add(txtMarmitex);
 		{
 			txtMiniMarmitex = new JTextField();
@@ -536,13 +536,13 @@ public class LancarComanda extends JDialog {
 				}
 			});
 			txtMiniMarmitex.setColumns(10);
-			txtMiniMarmitex.setBounds(179, 552, 146, 28);
+			txtMiniMarmitex.setBounds(179, 468, 146, 28);
 			contentPanel.add(txtMiniMarmitex);
 		}
 		{
 			JLabel lblMiniMarmitex = new JLabel("Mini-Marmitex:");
 			lblMiniMarmitex.setFont(new Font("Tahoma", Font.PLAIN, 18));
-			lblMiniMarmitex.setBounds(31, 548, 164, 30);
+			lblMiniMarmitex.setBounds(31, 464, 164, 30);
 			contentPanel.add(lblMiniMarmitex);
 		}
 		{	
@@ -618,6 +618,11 @@ public class LancarComanda extends JDialog {
 			txtPingaFarrista.setBounds(484, 181, 67, 28);
 			contentPanel.add(txtPingaFarrista);
 		}
+		
+		JLabel lblRefri = new JLabel("Refrigerante:");
+		lblRefri.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lblRefri.setBounds(31, 218, 164, 30);
+		contentPanel.add(lblRefri);
 		setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtRefeicao, btnMaisRefeicao, cmboxRefeicoes, txtCervejaSkolBrahma, txtCervejaOriginal, txtPingaLiguritaCristalina, txtPingaFarrista, txtRefri290, txtRefri600, txtRefri1000, txtRefri1250, txtRefri2000, txtAgua500, txtAgua1500, txtMarmitex, txtMiniMarmitex, txtOutros, btnMaisOutros, cmboxOutros, btRegistrar, button}));
 		
 
@@ -699,6 +704,4 @@ public class LancarComanda extends JDialog {
 				}
 		}
 	}
-	
-	
 }

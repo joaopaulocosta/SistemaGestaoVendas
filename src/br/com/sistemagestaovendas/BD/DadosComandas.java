@@ -25,7 +25,7 @@ public class DadosComandas {
 	
 	/**
 	 * Construtor que recebe a lista de comandas que serão tratadas
-	 * @param listaComandas
+	 * @param listaComandas ArrayList com comandas que serão armazenadas ou carregadas
 	 */
 	public DadosComandas(ArrayList<Comanda> listaComandas){
 		this.listaComandas = listaComandas;

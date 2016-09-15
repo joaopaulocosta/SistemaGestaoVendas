@@ -8,18 +8,17 @@ import java.io.Serializable;
  * @author Joao
  *
  */
-public class ProdutoComanda implements Serializable{
+public class ProdutoComanda extends Produto implements Serializable{
 
 	private int quantidade;
 
-	private Produto produto;
 	
 	/**
 	 * Construtor simples, recebe um produto e adiciona 0 para a 
 	 * quantidade consumida deste produto
 	 * @param produto
 	 */
-	public ProdutoComanda(Produto produto){
+	public ProdutoComanda(String nome, float preco){
 		this.produto = produto;
 		this.quantidade = 0;
 	}

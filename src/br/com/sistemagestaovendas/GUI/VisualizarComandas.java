@@ -72,6 +72,7 @@ public class VisualizarComandas extends JDialog {
 	private JLabel lblTotalMini = new JLabel();
 	private JLabel lblTotalOutros = new JLabel();
 	private JLabel lblValorTotal = new JLabel();
+	JLabel lblNComandasReal = new JLabel();
 	
 	//datas que serão usadas no filtro
 	private Date data1,data2;
@@ -82,7 +83,7 @@ public class VisualizarComandas extends JDialog {
 	 * @param listaComandas lista com as comandas que serão exibidas na tabela
 	 */
 	public VisualizarComandas(ArrayList<Comanda> listaComandas) {
-		setBounds(100, 100, 1077, 636);
+		setBounds(200, 50, 1077, 636);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -307,6 +308,14 @@ public class VisualizarComandas extends JDialog {
 		});
 		btnNovaVisualizao.setBounds(521, 527, 152, 48);
 		contentPanel.add(btnNovaVisualizao);
+		
+		JLabel lblNComandas = new JLabel("N\u00B0 de Comandas an\u00E1lisadas: ");
+		lblNComandas.setHorizontalAlignment(SwingConstants.LEFT);
+		lblNComandas.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNComandas.setBounds(20, 478, 193, 25);
+		contentPanel.add(lblNComandas);
+		
+		
 		contentPanel.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtData1, txtData2, btnNovaVisualizao, button}));
 		setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtData1, txtData2, btnNovaVisualizao, button}));
 		
@@ -444,6 +453,12 @@ public class VisualizarComandas extends JDialog {
 		lblValorTotal.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblValorTotal.setBounds(955, 417, 96, 25);
 		contentPanel.add(lblValorTotal); 
+		
+		lblNComandasReal.setText(String.valueOf(listaComandas.size()));
+		lblNComandasReal.setHorizontalAlignment(SwingConstants.LEFT);
+		lblNComandasReal.setFont(new Font("Tahoma", Font.PLAIN, 15));
+		lblNComandasReal.setBounds(223, 478, 193, 25);
+		contentPanel.add(lblNComandasReal);
 		
 	}
 	
