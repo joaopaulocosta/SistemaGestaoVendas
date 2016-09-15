@@ -1,18 +1,19 @@
 package br.com.sistemagestaovendas.vendas;
 
+import java.io.Serializable;
 
-public class Refeicao  {
+public class Refeicao  implements Serializable{
 
-	private int valor;
+	private float valor;
 	
 	private Produto produto;
 	
-	public Refeicao(Produto produto, int valor){
+	public Refeicao(Produto produto, float valor){
 		this.produto = produto;
 		this.valor = valor;
 	}
 	
-	public int getValor() {
+	public float getValor() {
 		return this.valor;
 	}
 

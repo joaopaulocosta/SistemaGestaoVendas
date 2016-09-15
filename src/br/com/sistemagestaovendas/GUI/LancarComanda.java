@@ -20,7 +20,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 
+import br.com.sistemagestaovendas.vendas.Comanda;
+import br.com.sistemagestaovendas.vendas.Outros;
 import br.com.sistemagestaovendas.vendas.ProdutoComanda;
+import br.com.sistemagestaovendas.vendas.Refeicao;
+
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
@@ -51,7 +55,11 @@ public class LancarComanda extends JDialog {
 	private JTextField txtCervejaOriginal;
 	private JTextField txtPingaFarrista;
 	
-	public LancarComanda(ArrayList<ProdutoComanda> listaProdutosComanda) {
+	public LancarComanda(ArrayList<ProdutoComanda> listaProdutosComanda, 
+			ArrayList<Comanda> listaComandas) {
+		
+		Comanda novaComanda = new Comanda(listaProdutosComanda);
+		
 		setTitle("Lan\u00E7amento de Comanda");
 		setBounds(100, 100, 614, 780);
 		getContentPane().setLayout(new BorderLayout());
@@ -134,16 +142,22 @@ public class LancarComanda extends JDialog {
 				//evento para processar refeição
 				@Override
 				public void focusLost(FocusEvent arg0) {
+					ProdutoComanda ref = null;
 					for(ProdutoComanda aux: listaProdutosComanda){
 						if(aux.getProduto().getNome().equals("Refeição")){
 							aux.setQuantidade(aux.getQuantidade() + 1);
+							ref = aux;
 						}
 					}
-					if(tratarEntrada(txtRefeicao)){
+					if(tratarEntrada(txtRefeicao) && ref != null){
 						lblQuantRefeicoes.setText("Quant: " + (++contRefeicoes));
 						cmboxRefeicoes.addItem(txtRefeicao.getText());
 						valorTotal += Float.parseFloat(txtRefeicao.getText());
 						lblValorTotalReal.setText("R$ " + valorTotal);
+						//criando nova refeicao
+						Refeicao novaRefeicao = new Refeicao(ref.getProduto(), Float.parseFloat(txtRefeicao.getText()) );
+						//adicionando refeicao a nova comanda
+						novaComanda.addRefeicao(novaRefeicao);
 					}
 				}
 			});
@@ -391,9 +405,11 @@ public class LancarComanda extends JDialog {
 			//evento para processar refeição
 			@Override
 			public void focusLost(FocusEvent arg0) {
+				ProdutoComanda out = null;
 				for(ProdutoComanda aux: listaProdutosComanda){
 					if(aux.getProduto().getNome().equals("Outros")){
 						aux.setQuantidade(aux.getQuantidade() + 1);
+						out = aux;
 					}
 				}
 				if(tratarEntrada(txtOutros)){
@@ -401,6 +417,10 @@ public class LancarComanda extends JDialog {
 					cmboxOutros.addItem(txtOutros.getText());
 					valorTotal += Float.parseFloat(txtOutros.getText());
 					lblValorTotalReal.setText("R$ " + valorTotal);
+					//criando nova refeicao
+					Outros novaDespesa = new Outros( Float.parseFloat(txtOutros.getText()) );
+					//adicionando refeicao a nova comanda
+					novaComanda.addOutros(novaDespesa);
 				}
 			}
 		});
@@ -422,6 +442,14 @@ public class LancarComanda extends JDialog {
 		}
 		{
 			JButton btRegistrar = new JButton("Registrar");
+			btRegistrar.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent arg0) {
+					novaComanda.setValorTotal(valorTotal);
+					listaComandas.add(novaComanda);
+					dispose();
+				}
+			});
 			btRegistrar.setBounds(311, 666, 152, 48);
 			contentPanel.add(btRegistrar);
 		}
@@ -581,14 +609,16 @@ public class LancarComanda extends JDialog {
 		
 		//trata evento gained focus
 		if(!flagLost){
-			for(ProdutoComanda aux: listaProdutosComanda){
-				if(aux.getProduto().getNome().equals(nomeProduto)){
-						if(!campo.getText().equals("")){
-							valorTotal -= (Integer.parseInt(campo.getText()) 
-									* aux.getProduto().getPrecoFixo());
-							lblValorTotalReal.setText("R$ " + valorTotal);
-							campo.setText("");
-						}
+			if(!campo.getText().equals("")){
+				for(ProdutoComanda aux: listaProdutosComanda){
+					if(aux.getProduto().getNome().equals(nomeProduto)){
+							
+						valorTotal -= (Integer.parseInt(campo.getText()) 
+								* aux.getProduto().getPrecoFixo());
+						lblValorTotalReal.setText("R$ " + valorTotal);
+						campo.setText("");
+						aux.setQuantidade(0); 
+					}
 				}
 			}
 		}
@@ -600,9 +630,12 @@ public class LancarComanda extends JDialog {
 							valorTotal += (Integer.parseInt(campo.getText()) 
 									* aux.getProduto().getPrecoFixo());
 							lblValorTotalReal.setText("R$ " + valorTotal);
+							aux.setQuantidade(Integer.parseInt(campo.getText()));	//soma quantidade
 					}
 				}
 			}
 		}
 	}
+	
+	
 }

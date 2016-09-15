@@ -1,6 +1,8 @@
 package br.com.sistemagestaovendas.vendas;
 
-public class Outros {
+import java.io.Serializable;
+
+public class Outros implements Serializable{
 
 	private String descricao;
 
@@ -8,6 +10,11 @@ public class Outros {
 	
 	public Outros(String desc, float preco){
 		this.descricao = desc;
+		this.preco = preco;
+	}
+	
+	public Outros(float preco){
+		this.descricao = "";
 		this.preco = preco;
 	}
 	

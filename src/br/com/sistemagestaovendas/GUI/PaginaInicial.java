@@ -1,5 +1,6 @@
 package br.com.sistemagestaovendas.GUI;
 
+import br.com.sistemagestaovendas.BD.DadosComandas;
 import br.com.sistemagestaovendas.BD.DadosProdutos;
 import br.com.sistemagestaovendas.vendas.*;
 import java.awt.Font;
@@ -29,8 +30,11 @@ public class PaginaInicial {
 	 */
 	public PaginaInicial() {
 		initialize();
-		DadosProdutos carregar = new DadosProdutos(this.listaProdutos);
-		carregar.carregarDados();
+		DadosProdutos carregarProdutos = new DadosProdutos(this.listaProdutos);
+		carregarProdutos.carregarDados();
+		
+		DadosComandas carregarComandas = new DadosComandas(this.listaComandas);
+		carregarComandas.carregarDados();
 	}
 
 	/**
@@ -55,7 +59,8 @@ public class PaginaInicial {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				gerarListaProdutoComanda();
-				LancarComanda lancaComanda = new LancarComanda(listaProdutosComanda);	//abri pagina para adicionar produto
+				LancarComanda lancaComanda = new LancarComanda(novaListaProdutosComanda(),
+						listaComandas);	//abri pagina para adicionar produto
 				lancaComanda.setVisible(true);
 			}
 		});
@@ -63,10 +68,17 @@ public class PaginaInicial {
 		btnLancarComanda.setFont(new Font("Tahoma", Font.BOLD, 15));
 		frmSistemaDeGestao.getContentPane().add(btnLancarComanda);
 		
-		JButton btnGerarRelatrio = new JButton("Gerar Relat\u00F3rio");
-		btnGerarRelatrio.setFont(new Font("Tahoma", Font.BOLD, 15));
-		btnGerarRelatrio.setBounds(200, 171, 200, 40);
-		frmSistemaDeGestao.getContentPane().add(btnGerarRelatrio);
+		JButton btnGerarRelatorio = new JButton("Visualizar Comandas");
+		btnGerarRelatorio.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				VisualizarComandas visComandas = new VisualizarComandas(listaComandas);	//abri pagina para visualizar comandas
+				visComandas.setVisible(true);
+			}
+		});
+		btnGerarRelatorio.setFont(new Font("Tahoma", Font.BOLD, 15));
+		btnGerarRelatorio.setBounds(200, 171, 200, 40);
+		frmSistemaDeGestao.getContentPane().add(btnGerarRelatorio);
 		
 		JButton btnAdicionarProduto = new JButton("Adicionar Produto");
 		btnAdicionarProduto.addMouseListener(new MouseAdapter() {
@@ -99,6 +111,9 @@ public class PaginaInicial {
 			public void mouseClicked(MouseEvent e) {
 				DadosProdutos salvar = new DadosProdutos(listaProdutos);
 				salvar.salvarDados();
+				
+				DadosComandas carregarComandas = new DadosComandas(listaComandas);
+				carregarComandas.salvarDados();
 				System.exit(0);
 			}
 		});
@@ -117,6 +132,16 @@ public class PaginaInicial {
 			ProdutoComanda novoProdutoComanda = new ProdutoComanda(aux);
 			listaProdutosComanda.add(novoProdutoComanda);
 		}
+	}
+	
+	public ArrayList<ProdutoComanda> novaListaProdutosComanda(){
+		ArrayList<ProdutoComanda> novaLista = new ArrayList<ProdutoComanda>();
+		for(Produto aux :this.listaProdutos){
+			ProdutoComanda novoProdutoComanda = new ProdutoComanda(aux);
+			novaLista.add(novoProdutoComanda);
+		}
+		
+		return novaLista;
 	}
 	
 	public void exibirPagina(){

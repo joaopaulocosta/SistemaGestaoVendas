@@ -1,6 +1,8 @@
 package br.com.sistemagestaovendas.vendas;
 
-public class ProdutoComanda {
+import java.io.Serializable;
+
+public class ProdutoComanda implements Serializable{
 
 	private int quantidade;
 

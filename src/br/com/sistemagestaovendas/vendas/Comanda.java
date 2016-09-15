@@ -1,6 +1,7 @@
 package br.com.sistemagestaovendas.vendas;
 
 import java.util.Date;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -8,7 +9,7 @@ import java.util.ArrayList;
  *  comanda essa usada para informar os gastos dos clientes
  * @author Joao
  */
-public class Comanda {
+public class Comanda implements Serializable {
 	
 
 	private float valorTotal;	//valor referente a soma de todos os produtos consumidos
@@ -23,11 +24,11 @@ public class Comanda {
 	 * Construtor Comanda, é usada a data atual do sistema, os ArrayList são 
 	 * iniciados e o valor total da comanda é setado como 0
 	 */
-	public Comanda(){
+	public Comanda(ArrayList<ProdutoComanda> listaProdutos){
 		this.valorTotal = 0;
 		this.data = new Date();
 		this.listaRefeicoes = new ArrayList<Refeicao>();
-		this.listaProdutos = new ArrayList<ProdutoComanda>();
+		this.listaProdutos = listaProdutos;
 		this.listaOutros = new ArrayList<Outros>();
 		
 	}
@@ -39,6 +40,10 @@ public class Comanda {
 	 */
 	public float getValorTotal() {
 		return this.valorTotal;
+	}
+	
+	public void setValorTotal(float valor){
+		this.valorTotal = valor;
 	}
 	
 	/**
@@ -88,10 +93,44 @@ public class Comanda {
 	/**
 	 * Método que retorna a quantidade de despesas inseridas 
 	 * na lista outros
-	 * @return tamanh da lista outros
+	 * @return tamanho da lista outros
 	 */
 	public int getQuantidadeOutros() {
 		return this.listaOutros.size();
 	}
-
+	
+	/**
+	 * Método que retorna a data da comanda
+	 * @return data
+	 */
+	public Date getData(){
+		return data;
+	}
+	
+	public float somarRefeicoes(){
+		float total = 0;
+		for(Refeicao aux: this.listaRefeicoes){
+			total += aux.getValor();
+		}
+		return total;
+	}
+	
+	public float somarOutros(){
+		float total = 0;
+		for(Outros aux: this.listaOutros){
+			total += aux.getPreco();
+		}
+		return total;
+	}
+	
+	public int getQuantidadeProdutoNome(String nome){
+		int quant = 0;
+		for(ProdutoComanda aux: this.listaProdutos){
+			if(aux.getProduto().getNome().equals(nome)){
+				quant = aux.getQuantidade();	
+			}
+		}
+		return quant;
+	}
+	
 }
