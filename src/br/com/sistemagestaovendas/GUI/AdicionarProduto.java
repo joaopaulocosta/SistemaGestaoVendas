@@ -17,13 +17,30 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.awt.Color;
+import org.eclipse.wb.swing.FocusTraversalOnArray;
+import java.awt.Component;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
+/**
+ * Classe que armazena o nome e o preço dos produtos que serão
+ * tratados na comanda
+ * @author Joao
+ *
+ */
 public class AdicionarProduto extends JDialog {
-
+	
+	//componentes visuais
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtNome;
 	private JTextField txtPreco;
-
+	
+	/**
+	 * Construtor que recebe uma lista onde serão inseridos os novos produtos,
+	 * os dados são inseridos nos campos, as entradas são tratadas, o objeto
+	 * é criado e adicionado a lista
+	 * @param listaProdutos	lista onde será adicionada o novo produto
+	 */
 	public AdicionarProduto(ArrayList<Produto> listaProdutos) {
 		setTitle("Adicionar Produto \u00E0 Comanda");
 		setBounds(100, 100, 553, 415);
@@ -43,6 +60,7 @@ public class AdicionarProduto extends JDialog {
 		label_1.setBounds(93, 104, 58, 14);
 		contentPanel.add(label_1);
 		
+		//campo nome
 		txtNome = new JTextField();
 		txtNome.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		txtNome.setColumns(10);
@@ -54,13 +72,23 @@ public class AdicionarProduto extends JDialog {
 		label_2.setBounds(93, 176, 58, 14);
 		contentPanel.add(label_2);
 		
+		//campo preço
 		txtPreco = new JTextField();
 		txtPreco.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		txtPreco.setColumns(10);
 		txtPreco.setBounds(159, 166, 308, 39);
 		contentPanel.add(txtPreco);
 		
+		//botão retornar a página inicial e seus eventos
 		JButton btnRetornar = new JButton("Retornar");
+		btnRetornar.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode()==KeyEvent.VK_ENTER){	//caso enter seja pressionado
+					dispose();	//fechando janela
+				}
+			}
+		});
 		btnRetornar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {			
@@ -77,7 +105,20 @@ public class AdicionarProduto extends JDialog {
 		lblAlerta.setVisible(false);
 		contentPanel.add(lblAlerta);
 		
+		//botao adicionar novo produto e seus eventos
 		JButton btnAdicionar = new JButton("Adicionar");
+		btnAdicionar.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode()==KeyEvent.VK_ENTER){	//caso enter seja pressionado
+					if(verificaCampo(txtNome.getText(), txtPreco.getText(), lblAlerta)){
+						Produto novoProduto = new Produto(txtNome.getText(),Float.parseFloat(txtPreco.getText()));
+						listaProdutos.add(novoProduto);
+						dispose();
+					}
+				}
+			}
+		});
 		btnAdicionar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -90,6 +131,7 @@ public class AdicionarProduto extends JDialog {
 		});
 		btnAdicionar.setBounds(282, 281, 152, 48);
 		contentPanel.add(btnAdicionar);
+		setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtNome, txtPreco, btnAdicionar, btnRetornar}));
 		
 		
 	}

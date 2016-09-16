@@ -2,35 +2,38 @@ package br.com.sistemagestaovendas.vendas;
 
 import java.io.Serializable;
 
+/**
+ * Classe que armazenará todas as despesas que não possuem nome cadastrado
+ * na comanda
+ * @author Joao
+ *
+ */
 public class Outros implements Serializable{
-
-	private String descricao;
 
 	private float preco;
 	
-	public Outros(String desc, float preco){
-		this.descricao = desc;
-		this.preco = preco;
-	}
-	
-	public Outros(float preco){
-		this.descricao = "";
-		this.preco = preco;
-	}
-	
-	public void setDescricao(String desc) {
-		this.descricao = desc;
-	}
 
+	/**
+	 * Construtor simples recebe apenas o preço da despesa
+	 * @param preco
+	 */
+	public Outros(float preco){
+
+		this.preco = preco;
+	}
+	
+	/**
+	 * Altera o preco da despesa
+	 * @param preco
+	 */
 	public void setPreco(float preco) {
 		this.preco = preco;
 	}
 	
-	
-	public String getDescricao(){
-		return this.descricao;
-	}
-	
+	/**
+	 * retorna o preço da despesa
+	 * @return
+	 */
 	public float getPreco(){
 		return this.preco;
 	}

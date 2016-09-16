@@ -41,16 +41,26 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.JTextField;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import org.eclipse.wb.swing.FocusTraversalOnArray;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
+/**
+ * Classe que possibilita a visualização de todas as comandas, com total de vendas para 
+ * cada produto, também foi implementado um filtro onde pode-se analisar comandas entre
+ * um dado intervalo de datas
+ * 
+ * @author Joao
+ *
+ */
 public class VisualizarComandas extends JDialog {
 	
+	//componentes visuais
 	private final JPanel contentPanel = new JPanel();
 	private JTable tabela;
 	private JTextField txtData1;
 	private JTextField txtData2;
-	private Date data1,data2;
 	private DefaultTableModel dtm;
-	
 	private JLabel lblTotal = new JLabel("Total:");;
 	private JLabel lblTotalQuantRef = new JLabel();
 	private JLabel lblTotalValorRef = new JLabel(); 
@@ -63,13 +73,21 @@ public class VisualizarComandas extends JDialog {
 	private JLabel lblTotalOutros = new JLabel();
 	private JLabel lblValorTotal = new JLabel();
 	
+	//datas que serão usadas no filtro
+	private Date data1,data2;
+	
+	/**
+	 * Método construtor onde são criados os componentes, incluindo a tabela e suas linhas
+	 * onde cada linha representa uma comanda
+	 * @param listaComandas lista com as comandas que serão exibidas na tabela
+	 */
 	public VisualizarComandas(ArrayList<Comanda> listaComandas) {
 		setBounds(100, 100, 1077, 636);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		getContentPane().add(contentPanel, BorderLayout.CENTER);
 		
-		
+		//criando tabela
 		tabela = new JTable();
 		tabela.setRowSelectionAllowed(false);
 		tabela.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -78,7 +96,7 @@ public class VisualizarComandas extends JDialog {
 		tabela.setBorder(new LineBorder(new Color(0, 0, 0)));
 		tabela.setBounds(10, 97, 1041, 321);
 		
-		
+		//incluindo cabeçalho
 		tabela.setModel(new DefaultTableModel(
 			new String[][] {
 				
@@ -88,12 +106,13 @@ public class VisualizarComandas extends JDialog {
 			}
 		));
 		
+		//criando modelo
 		dtm = (javax.swing.table.DefaultTableModel)tabela.getModel();
 		
 		//classe que restringe variáveis float com apenas duas casas decimais
 		DecimalFormat df = new DecimalFormat();
 		
-		
+		//adicionando as linhas
 		for(Comanda aux: listaComandas){
 			String data = (aux.getData().getDate()) + "/" + (aux.getData().getMonth()+1) +
 					"/" + (aux.getData().getYear() + 1900);
@@ -125,6 +144,7 @@ public class VisualizarComandas extends JDialog {
 		contentPanel.setLayout(null);
 		contentPanel.add(tabela); 
 		
+		//calculando total dos itens consumidos
 		calcularTotal(listaComandas);
 		
 		{
@@ -135,17 +155,27 @@ public class VisualizarComandas extends JDialog {
 			contentPanel.add(lblVisualizaoDeComandas);
 		}
 		
+		//Botão retornar junto com seus eventos
 		JButton button = new JButton("Retornar");
+		button.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode()==KeyEvent.VK_ENTER){	//caso enter seja pressionado
+					dispose();
+				}
+			}
+		});
+		button.setToolTipText("Retornar a p\u00E1gina inicial");
 		button.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				
 				dispose();
 			}
 		});
 		button.setBounds(359, 527, 152, 48);
 		contentPanel.add(button);
 		
+		//inserindo barra de rolagem vertical na tabela
 		JScrollPane scrollPane = new JScrollPane(tabela);
 		scrollPane.setBounds(10, 74, 1041, 332);
 		contentPanel.add(scrollPane);
@@ -163,17 +193,19 @@ public class VisualizarComandas extends JDialog {
 		lblFiltrar.setBounds(661, 470, 74, 25);
 		contentPanel.add(lblFiltrar);
 		
+		//alerta usado no tratamento das datas
 		JLabel lblAlerta = new JLabel("Formato de data: 15/09/2016");
 		lblAlerta.setForeground(Color.RED);
-		lblAlerta.setHorizontalAlignment(SwingConstants.LEFT);
-		lblAlerta.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lblAlerta.setBounds(762, 502, 252, 25);
+		lblAlerta.setHorizontalAlignment(SwingConstants.CENTER);
+		lblAlerta.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblAlerta.setBounds(668, 502, 346, 25);
 		lblAlerta.setVisible(false);
 		contentPanel.add(lblAlerta);
 		
 		
-		
+		//campo que receberá primeira data limitante junto com seus eventos
 		txtData1 = new JTextField();
+		txtData1.setToolTipText("Data inicial a ser filtrada");
 		txtData1.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent arg0) {
@@ -204,7 +236,9 @@ public class VisualizarComandas extends JDialog {
 		label.setBounds(889, 470, 18, 25);
 		contentPanel.add(label);
 		
+		//campo que receberá a segunda data limitante junto com seus eventos
 		txtData2 = new JTextField();
+		txtData2.setToolTipText("Data final a ser filtrada");
 		txtData2.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent arg0) {
@@ -226,8 +260,6 @@ public class VisualizarComandas extends JDialog {
 						txtData2.requestFocus();
 					}
 					
-				}else{
-					lblAlerta.setVisible(false);
 				}
 			}
 		});
@@ -241,24 +273,55 @@ public class VisualizarComandas extends JDialog {
 		lblDe.setBounds(738, 470, 27, 25);
 		contentPanel.add(lblDe);
 		
+		//Botão para iniciar filtragem junto com eventos
 		JButton btnNovaVisualizao = new JButton("Nova Visualiza\u00E7\u00E3o");
+		btnNovaVisualizao.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode()==KeyEvent.VK_ENTER){	//caso enter seja pressionado
+					if(txtData1.getText().equals("") || txtData2.getText().equals("")){
+						lblAlerta.setText("Insira duas datas limitantes");
+						lblAlerta.setVisible(true);
+					}
+					else{
+						filtrar(listaComandas);
+					}
+					
+				}
+			}
+		});
+		btnNovaVisualizao.setToolTipText("Nova tabela a partir de datas limitantes");
 		btnNovaVisualizao.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				filtrar(listaComandas);
+				if(txtData1.getText().equals("") || txtData2.getText().equals("")){
+					lblAlerta.setText("Insira duas datas limitantes");
+					lblAlerta.setVisible(true);
+				}
+				else{
+					filtrar(listaComandas);
+				}
 			}
 		});
 		btnNovaVisualizao.addFocusListener(new FocusAdapter() {
 		});
 		btnNovaVisualizao.setBounds(521, 527, 152, 48);
 		contentPanel.add(btnNovaVisualizao);
+		contentPanel.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtData1, txtData2, btnNovaVisualizao, button}));
+		setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtData1, txtData2, btnNovaVisualizao, button}));
 		
 		
 		
 		
 	}
 	
+	/**
+	 * Método que soma os itens vendidos entre todas as comandas passadas por paramêtro,
+	 * e exibe para cada label abaixo da tabela sua respectiva soma 
+	 * @param listaComandas lista com comandas que terão despesas somadas
+	 */
 	public void calcularTotal( ArrayList<Comanda> listaComandas ){
+		//contadores
 		int contQuantRef = 0;
 		float contValorRef = 0;
 		int contCerv = 0;
@@ -271,7 +334,7 @@ public class VisualizarComandas extends JDialog {
 		float contValorTotal = 0;
 		
 		
-		
+		//para cada comanda da lista os produtos são somados
 		for(Comanda aux: listaComandas){
 			contQuantRef += aux.getQuantidadeRefeicoes();
 			contValorRef += aux.somarRefeicoes();
@@ -295,11 +358,12 @@ public class VisualizarComandas extends JDialog {
 		//classe que restringe variáveis float com apenas duas casas decimais
 		DecimalFormat df = new DecimalFormat();
 		
-		
+		//exibindo os resultados
 		lblTotal.setHorizontalAlignment(SwingConstants.LEFT);
 		lblTotal.setFont(new Font("Tahoma", Font.BOLD, 20));
 		lblTotal.setBounds(20, 414, 74, 25);
 		contentPanel.add(lblTotal);
+		lblTotalQuantRef.setToolTipText("Quantidade de Refei\u00E7\u00F5es servidas");
 		
 
 		lblTotalQuantRef.setText(String.valueOf(contQuantRef));
@@ -307,13 +371,15 @@ public class VisualizarComandas extends JDialog {
 		lblTotalQuantRef.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblTotalQuantRef.setBounds(104, 417, 92, 25);
 		contentPanel.add(lblTotalQuantRef);
+		lblTotalValorRef.setToolTipText("Valor de todas as refei\u00E7\u00F5es servidas");
 		
 		
-		lblTotalValorRef.setText(String.valueOf(df.format(contValorRef)));
+		lblTotalValorRef.setText("R$ " + String.valueOf(df.format(contValorRef)));
 		lblTotalValorRef.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTotalValorRef.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblTotalValorRef.setBounds(200, 417, 92, 25);
 		contentPanel.add(lblTotalValorRef);
+		lblTotalCerveja.setToolTipText("Total de cervejas vendidas");
 		
 
 		
@@ -322,6 +388,7 @@ public class VisualizarComandas extends JDialog {
 		lblTotalCerveja.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblTotalCerveja.setBounds(290, 417, 98, 25);
 		contentPanel.add(lblTotalCerveja);
+		lblTotalPinga.setToolTipText("Total de doses de pinga vendidas");
 		
 		
 		lblTotalPinga.setText(String.valueOf(contPinga));
@@ -329,6 +396,7 @@ public class VisualizarComandas extends JDialog {
 		lblTotalPinga.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblTotalPinga.setBounds(389, 417, 92, 25);
 		contentPanel.add(lblTotalPinga);
+		lblTotalRefri.setToolTipText("Total de Refrigerantes vendidos");
 		
 		
 		lblTotalRefri.setText(String.valueOf(contRefri));
@@ -336,6 +404,7 @@ public class VisualizarComandas extends JDialog {
 		lblTotalRefri.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblTotalRefri.setBounds(480, 417, 98, 25);
 		contentPanel.add(lblTotalRefri);
+		lblTotalAgua.setToolTipText("Total de \u00E1guas vendidas");
 		
 		
 		lblTotalAgua.setText(String.valueOf(contAgua));
@@ -343,6 +412,7 @@ public class VisualizarComandas extends JDialog {
 		lblTotalAgua.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblTotalAgua.setBounds(575, 417, 98, 25);
 		contentPanel.add(lblTotalAgua);
+		lblTotalMarmitex.setToolTipText("Total de marmitex vendidas");
 		
 		
 		lblTotalMarmitex.setText(String.valueOf(contMarmitex));
@@ -350,6 +420,7 @@ public class VisualizarComandas extends JDialog {
 		lblTotalMarmitex.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblTotalMarmitex.setBounds(668, 417, 98, 25);
 		contentPanel.add(lblTotalMarmitex);
+		lblTotalMini.setToolTipText("Total de mini-marmitex vendidas");
 		
 		
 		lblTotalMini.setText(String.valueOf(contMini));
@@ -357,16 +428,18 @@ public class VisualizarComandas extends JDialog {
 		lblTotalMini.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblTotalMini.setBounds(762, 417, 98, 25);
 		contentPanel.add(lblTotalMini);
+		lblTotalOutros.setToolTipText("Valor total em vendas de produtos n\u00E3o cadastrados na comanda");
 		
 		
-		lblTotalOutros.setText(String.valueOf(df.format(contOutros)));
+		lblTotalOutros.setText("R$ " + String.valueOf(df.format(contOutros)));
 		lblTotalOutros.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTotalOutros.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblTotalOutros.setBounds(858, 417, 98, 25);
 		contentPanel.add(lblTotalOutros);
+		lblValorTotal.setToolTipText("Valor total de vendas");
 		
 	
-		lblValorTotal.setText(String.valueOf(df.format(contValorTotal)));
+		lblValorTotal.setText("R$ " + String.valueOf(df.format(contValorTotal)));
 		lblValorTotal.setHorizontalAlignment(SwingConstants.CENTER);
 		lblValorTotal.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		lblValorTotal.setBounds(955, 417, 96, 25);
@@ -374,6 +447,11 @@ public class VisualizarComandas extends JDialog {
 		
 	}
 	
+	/**
+	 * Método que filtra as linhas da tabela de acordo com intervalo informado pelos dois 
+	 * campos de data
+	 * @param listaComandas
+	 */
 	public void filtrar(ArrayList<Comanda> listaComandas){
 		ArrayList<Comanda> novaLista = new ArrayList<Comanda>();
 		if(!txtData1.equals("") && !txtData2.equals("")){
@@ -415,7 +493,7 @@ public class VisualizarComandas extends JDialog {
 			
 				}
 			}
-			System.out.println(novaLista.size());
+			//novo calculo é feito a partir da nova lista de comandas filtrada
 			calcularTotal(novaLista);
 		}
 	}

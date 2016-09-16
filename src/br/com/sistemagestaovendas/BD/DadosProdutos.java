@@ -15,15 +15,27 @@ import java.io.Reader;
 import java.util.ArrayList;
 import br.com.sistemagestaovendas.vendas.Produto;
 
+/**
+ * Classe responsável por armazenar e carregar os dados referentes 
+ * a classe Produto
+ * @author Joao-
+ *
+ */
 public class DadosProdutos {
 	
 	private ArrayList<Produto> listaProdutos;
 	
+	/**
+	 * Construtor que recebe a lista de produtos que serão tratados
+	 * @param listaComandas
+	 */
 	public DadosProdutos(ArrayList<Produto> listaProdutos){
 		this.listaProdutos = listaProdutos;
 	}
 	
-	//função que ira importar dados binarios de arquivo ao iniciar o programa
+	/**
+	 * Método que ira importar dados binarios de arquivo ao iniciar o programa
+	 */
 	public void carregarDados(){
 		try {
 			File file = new File( "produtos.bin" );
@@ -48,7 +60,9 @@ public class DadosProdutos {
 		}
 	}
 	
-	//função que ira salvar os dados de produtos antes de sair da aplicação
+	/**
+	 * Método que ira salvar os dados de produtos antes de sair da aplicação
+	 */
 	public void salvarDados(){
 		try {
 				File file = new File( "produtos.bin" );

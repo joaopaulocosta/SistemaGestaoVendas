@@ -107,6 +107,9 @@ public class Comanda implements Serializable {
 		return data;
 	}
 	
+	/**
+	 * Método que retorna a soma dos preços de todas as refeições da comanda
+	 */
 	public float somarRefeicoes(){
 		float total = 0;
 		for(Refeicao aux: this.listaRefeicoes){
@@ -115,6 +118,10 @@ public class Comanda implements Serializable {
 		return total;
 	}
 	
+	/**
+	 * Método que retorna a soma de todas as despesas que foram inseridos no 
+	 * campo Outros
+	 */
 	public float somarOutros(){
 		float total = 0;
 		for(Outros aux: this.listaOutros){
@@ -123,6 +130,11 @@ public class Comanda implements Serializable {
 		return total;
 	}
 	
+	/**
+	 * Método que retorna a quantidade consumida de um determinado produto
+	 * @param nome	String com o nome do produto
+	 * @return Quantidade do produto consumida
+	 */
 	public int getQuantidadeProdutoNome(String nome){
 		int quant = 0;
 		for(ProdutoComanda aux: this.listaProdutos){

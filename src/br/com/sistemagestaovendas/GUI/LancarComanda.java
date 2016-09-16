@@ -2,7 +2,6 @@ package br.com.sistemagestaovendas.GUI;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -16,9 +15,8 @@ import javax.swing.JComboBox;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.text.SimpleDateFormat;
+import java.text.DecimalFormat;
 
 import br.com.sistemagestaovendas.vendas.Comanda;
 import br.com.sistemagestaovendas.vendas.Outros;
@@ -29,9 +27,20 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import org.eclipse.wb.swing.FocusTraversalOnArray;
+import java.awt.Component;
 
+/**
+ * Classe que implementa a interface gráfica da janela Lançar Comanda, na tela
+ * é exibido um formulário de acordo com produtos cadastrados, esses campos devem
+ * ser preenchidos de acordo com despesas assinaladas na comanda de papel, tratamentos para
+ * entradas também foram implementados.
+ * @author Joao
+ *
+ */
 public class LancarComanda extends JDialog {
-
+	
+	//componentes criados para receber os dados
 	private final JPanel contentPanel = new JPanel();
 	private JTextField txtRefeicao;
 	private JTextField txtAgua500;
@@ -48,15 +57,22 @@ public class LancarComanda extends JDialog {
 	private JTextField txtMiniMarmitex;
 	private JLabel lblValorTotalReal;
 	private JLabel lblAlerta;
+	private JTextField txtCervejaOriginal;
+	private JTextField txtPingaFarrista;
+	private JButton button;
+	private JButton btRegistrar;
 	
+	//contadores
 	private int contRefeicoes = 0;
 	private int contOutros = 0;
 	private float valorTotal = 0;
-	private JTextField txtCervejaOriginal;
-	private JTextField txtPingaFarrista;
+	
 	
 	public LancarComanda(ArrayList<ProdutoComanda> listaProdutosComanda, 
 			ArrayList<Comanda> listaComandas) {
+		
+		//classe que restringe variáveis float com apenas duas casas decimais
+		DecimalFormat df = new DecimalFormat();
 		
 		Comanda novaComanda = new Comanda(listaProdutosComanda);
 		
@@ -68,9 +84,10 @@ public class LancarComanda extends JDialog {
 		contentPanel.setLayout(null);
 		
 		lblAlerta = new JLabel("Apenas n\u00FAmeros podem ser digitados, utilize . no lugar de ,");
+		lblAlerta.setHorizontalAlignment(SwingConstants.CENTER);
 		lblAlerta.setForeground(Color.RED);
-		lblAlerta.setFont(new Font("Tahoma", Font.PLAIN, 11));
-		lblAlerta.setBounds(130, 638, 424, 30);
+		lblAlerta.setFont(new Font("Tahoma", Font.BOLD, 11));
+		lblAlerta.setBounds(31, 632, 557, 36);
 		lblAlerta.setVisible(false);
 		contentPanel.add(lblAlerta);
 		
@@ -153,7 +170,7 @@ public class LancarComanda extends JDialog {
 						lblQuantRefeicoes.setText("Quant: " + (++contRefeicoes));
 						cmboxRefeicoes.addItem(txtRefeicao.getText());
 						valorTotal += Float.parseFloat(txtRefeicao.getText());
-						lblValorTotalReal.setText("R$ " + valorTotal);
+						lblValorTotalReal.setText("R$ " + df.format(valorTotal));
 						//criando nova refeicao
 						Refeicao novaRefeicao = new Refeicao(ref.getProduto(), Float.parseFloat(txtRefeicao.getText()) );
 						//adicionando refeicao a nova comanda
@@ -416,7 +433,7 @@ public class LancarComanda extends JDialog {
 					lblQuantOutros.setText("Quant: " + (++contOutros));
 					cmboxOutros.addItem(txtOutros.getText());
 					valorTotal += Float.parseFloat(txtOutros.getText());
-					lblValorTotalReal.setText("R$ " + valorTotal);
+					lblValorTotalReal.setText("R$ " + df.format(valorTotal));
 					//criando nova refeicao
 					Outros novaDespesa = new Outros( Float.parseFloat(txtOutros.getText()) );
 					//adicionando refeicao a nova comanda
@@ -430,7 +447,15 @@ public class LancarComanda extends JDialog {
 		
 		{	
 			//fechar a janela
-			JButton button = new JButton("Retornar");
+			button = new JButton("Retornar");
+			button.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+					if (e.getKeyCode()==KeyEvent.VK_ENTER){	//caso enter seja pressionado
+						dispose();
+					}
+				}
+			});
 			button.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
@@ -441,13 +466,38 @@ public class LancarComanda extends JDialog {
 			contentPanel.add(button);
 		}
 		{
-			JButton btRegistrar = new JButton("Registrar");
+			btRegistrar = new JButton("Registrar");
+			btRegistrar.addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+					if (e.getKeyCode()==KeyEvent.VK_ENTER){	//caso enter seja pressionado
+						//Restringindo criação de comanda apenas se ouver sido lançado alguma despesa
+						if(valorTotal > 0){
+							novaComanda.setValorTotal(valorTotal);
+							listaComandas.add(novaComanda);
+							dispose();
+						}
+						else{
+							lblAlerta.setText("Lançe uma dispesa antes de registrar");
+							lblAlerta.setVisible(true);
+						}
+					}
+					
+				}
+			});
 			btRegistrar.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent arg0) {
-					novaComanda.setValorTotal(valorTotal);
-					listaComandas.add(novaComanda);
-					dispose();
+					//Restringindo criação de comanda apenas se ouver sido lançado alguma despesa
+					if(valorTotal > 0){
+						novaComanda.setValorTotal(valorTotal);
+						listaComandas.add(novaComanda);
+						dispose();
+					}
+					else{
+						lblAlerta.setText("Lançe uma dispesa antes de registrar");
+						lblAlerta.setVisible(true);
+					}
 				}
 			});
 			btRegistrar.setBounds(311, 666, 152, 48);
@@ -568,20 +618,24 @@ public class LancarComanda extends JDialog {
 			txtPingaFarrista.setBounds(484, 181, 67, 28);
 			contentPanel.add(txtPingaFarrista);
 		}
+		setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtRefeicao, btnMaisRefeicao, cmboxRefeicoes, txtCervejaSkolBrahma, txtCervejaOriginal, txtPingaLiguritaCristalina, txtPingaFarrista, txtRefri290, txtRefri600, txtRefri1000, txtRefri1250, txtRefri2000, txtAgua500, txtAgua1500, txtMarmitex, txtMiniMarmitex, txtOutros, btnMaisOutros, cmboxOutros, btRegistrar, button}));
 		
 
 
 		
 		
 	}
-	
+	/**
+	 * Método que trata valores inseridos nos campos do formulário
+	 * @param campo
+	 * @return False caso o valor esteja fora do padrao, True se estiver tudo OK
+	 */
 	public boolean tratarEntrada(JTextField campo){
 		
 		String entrada = campo.getText();
 		
 		//verifica se o campo pode ser convertido em um tipo float
-		try{
-			
+		try{	
 			float x = Float.parseFloat(entrada);
 			lblAlerta.setVisible(false);
 			return true;
@@ -606,7 +660,8 @@ public class LancarComanda extends JDialog {
 	 */
 	public void trataEventosFocus(ArrayList<ProdutoComanda> listaProdutosComanda, 
 			String nomeProduto, JTextField campo, boolean flagLost){
-		
+		//classe que restringe variáveis float com apenas duas casas decimais
+		DecimalFormat df = new DecimalFormat();
 		//trata evento gained focus
 		if(!flagLost){
 			if(!campo.getText().equals("")){
@@ -615,7 +670,7 @@ public class LancarComanda extends JDialog {
 							
 						valorTotal -= (Integer.parseInt(campo.getText()) 
 								* aux.getProduto().getPrecoFixo());
-						lblValorTotalReal.setText("R$ " + valorTotal);
+						lblValorTotalReal.setText("R$ " +  df.format(valorTotal));
 						campo.setText("");
 						aux.setQuantidade(0); 
 					}
@@ -624,16 +679,24 @@ public class LancarComanda extends JDialog {
 		}
 		//trata evento lost focus
 		else{
-			if(tratarEntrada(campo)){
 				for(ProdutoComanda aux: listaProdutosComanda){
 					if(aux.getProduto().getNome().equals(nomeProduto)){
-							valorTotal += (Integer.parseInt(campo.getText()) 
-									* aux.getProduto().getPrecoFixo());
-							lblValorTotalReal.setText("R$ " + valorTotal);
-							aux.setQuantidade(Integer.parseInt(campo.getText()));	//soma quantidade
+							try{
+								valorTotal += (Integer.parseInt(campo.getText()) 
+										* aux.getProduto().getPrecoFixo());
+								lblValorTotalReal.setText("R$ " + df.format(valorTotal));
+								aux.setQuantidade(Integer.parseInt(campo.getText()));	//soma quantidade
+					
+							}catch(Exception ex){
+								if(!campo.getText().equals("")){
+									lblAlerta.setText("Apenas valores inteiros para este campo");
+									lblAlerta.setVisible(true);
+									campo.setText("");
+									campo.requestFocus();
+								}
+							}
 					}
 				}
-			}
 		}
 	}
 	

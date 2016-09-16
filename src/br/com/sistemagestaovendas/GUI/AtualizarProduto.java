@@ -21,6 +21,10 @@ import java.util.ArrayList;
 import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import java.awt.Color;
+import org.eclipse.wb.swing.FocusTraversalOnArray;
+import java.awt.Component;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 /**
  * Classe que possui os componentes gráficos que são responsáveis por realizar atualizações
  *  de preços sobre os produtos que estão na comanda
@@ -113,6 +117,14 @@ public class AtualizarProduto extends JDialog {
 		
 		//criando botão retornar à página inicial
 		JButton btnRetornar = new JButton("Retornar");
+		btnRetornar.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode()==KeyEvent.VK_ENTER){	//caso enter seja pressionado
+					dispose();	//fechando janela
+				}
+			}
+		});
 		btnRetornar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {			
@@ -123,13 +135,29 @@ public class AtualizarProduto extends JDialog {
 		contentPanel.add(btnRetornar);
 		
 		JLabel lblAlerta = new JLabel("O valor informado n\u00E3o pode estar em branco");
+		lblAlerta.setHorizontalAlignment(SwingConstants.CENTER);
+		lblAlerta.setFont(new Font("Tahoma", Font.BOLD, 11));
 		lblAlerta.setForeground(Color.RED);
-		lblAlerta.setBounds(192, 228, 342, 42);
+		lblAlerta.setBounds(10, 228, 563, 42);
 		lblAlerta.setVisible(false);
 		contentPanel.add(lblAlerta);
 		
 		//criando botão para salvar modificações de preços
 		JButton btnAtualizar = new JButton("Adicionar");
+		btnAtualizar.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode()==KeyEvent.VK_ENTER){	//caso enter seja pressionado
+					//verifica informações inseridas
+					if(verificaCampo(comboBox.getSelectedItem().toString() ,
+							txtNovoPreco.getText(),lblAlerta)){
+						//chama método para atualizar preço
+						produtoSelecionado.atualizarPreco(Float.parseFloat(txtNovoPreco.getText()));
+						dispose();
+					}
+				}
+			}
+		});
 		btnAtualizar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -144,6 +172,7 @@ public class AtualizarProduto extends JDialog {
 		});
 		btnAtualizar.setBounds(282, 281, 152, 48);
 		contentPanel.add(btnAtualizar);
+		setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{comboBox, txtNovoPreco, btnAtualizar, btnRetornar}));
 		
 		
 		

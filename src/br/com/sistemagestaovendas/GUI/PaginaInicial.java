@@ -4,6 +4,8 @@ import br.com.sistemagestaovendas.BD.DadosComandas;
 import br.com.sistemagestaovendas.BD.DadosProdutos;
 import br.com.sistemagestaovendas.vendas.*;
 import java.awt.Font;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -13,51 +15,75 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
-
+/**
+ * Classe que implementa a interface gráfica da página inicial do sistema,
+ * a partir de eventos criados para os botões outras janelas podem ser abertas
+ * @author Joao
+ *
+ */
 public class PaginaInicial {
 	
-	private JFrame frmSistemaDeGestao;
-	//lista que armazenará os produtos criados pela janela adicionar produtos
+	private JFrame frmSistemaDeGestao;	//Frame para tela Inicial
+	
+	//lista que armazenará os produtos lidos em arquivo
 	private ArrayList<Produto> listaProdutos = new ArrayList<Produto>();	
 	
+	//lista que armazena os produtos que cada comanda possui
 	private ArrayList<ProdutoComanda> listaProdutosComanda = new ArrayList<ProdutoComanda>();
 	
+	//lista que armazena as comandas criadas pela janela Lançar Comanda
 	private ArrayList<Comanda> listaComandas = new ArrayList<Comanda>();
 	
 	
 	/**
-	 * Create the application.
+	 * Método construtor que chama outros três métodos, criação da janela Página Inicial,
+	 *  leitura dos produtos em arquivo e leitura das comandas em arquivo.
 	 */
 	public PaginaInicial() {
 		initialize();
 		DadosProdutos carregarProdutos = new DadosProdutos(this.listaProdutos);
 		carregarProdutos.carregarDados();
-		
 		DadosComandas carregarComandas = new DadosComandas(this.listaComandas);
 		carregarComandas.carregarDados();
 	}
 
 	/**
-	 * Initialize the contents of the frame.
+	 * Método que cria todos os componentes visuais que serão exibidos na tela, e
+	 * implementa os eventos necessários para o funcionamento do programa
 	 */
 	private void initialize() {
+		//Inicializando o frame da tela Inicial
 		frmSistemaDeGestao = new JFrame();
 		frmSistemaDeGestao.setTitle("Sistema de Gest\u00E3o de Vendas");
 		frmSistemaDeGestao.setBounds(100, 100, 601, 503);
 		frmSistemaDeGestao.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frmSistemaDeGestao.getContentPane().setLayout(null);
 		
+		//Titulo Principal
 		JLabel labelTitulo = new JLabel("Sistema de Gest\u00E3o de Vendas");
 		labelTitulo.setBounds(-11, 11, 607, 71);
 		labelTitulo.setHorizontalAlignment(SwingConstants.CENTER);
-		labelTitulo.setIcon(new ImageIcon("D:\\documentos\\UFLA\\6 per\u00EDodo\\JavaGroup\\SitemaGestaoVendas\\img\\logo.png"));
+		//Inserindo o ícone da tela
+		labelTitulo.setIcon(new ImageIcon("img\\logo.png"));
 		labelTitulo.setFont(new Font("Tahoma", Font.BOLD, 20));
 		frmSistemaDeGestao.getContentPane().add(labelTitulo);
 		
+		//Criando botão para janela Lançar Comanda
 		JButton btnLancarComanda = new JButton("Lan\u00E7ar Comanda");
+		btnLancarComanda.addKeyListener(new KeyAdapter() {	//evento de teclado
+			@Override
+			public void keyPressed(KeyEvent e) {
+				 if (e.getKeyCode()==KeyEvent.VK_ENTER){	//caso enter seja pressionado
+					 gerarListaProdutoComanda();
+					LancarComanda lancaComanda = new LancarComanda(novaListaProdutosComanda(),
+							listaComandas);	//abri pagina para adicionar produto
+					lancaComanda.setVisible(true);
+				 }
+			}
+		});
 		btnLancarComanda.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent e) {	//evento de mouse
 				gerarListaProdutoComanda();
 				LancarComanda lancaComanda = new LancarComanda(novaListaProdutosComanda(),
 						listaComandas);	//abri pagina para adicionar produto
@@ -68,20 +94,40 @@ public class PaginaInicial {
 		btnLancarComanda.setFont(new Font("Tahoma", Font.BOLD, 15));
 		frmSistemaDeGestao.getContentPane().add(btnLancarComanda);
 		
-		JButton btnGerarRelatorio = new JButton("Visualizar Comandas");
-		btnGerarRelatorio.addMouseListener(new MouseAdapter() {
+		//Criando botão para janela Visualizar Comandas
+		JButton btnVisualizarComandas = new JButton("Visualizar Comandas");
+		btnVisualizarComandas.addKeyListener(new KeyAdapter() {	//evento de teclado
+			@Override
+			public void keyPressed(KeyEvent e) {
+				 if (e.getKeyCode()==KeyEvent.VK_ENTER){	//caso enter seja pressionado
+					VisualizarComandas visComandas = new VisualizarComandas(listaComandas);	//abri pagina para visualizar comandas
+					visComandas.setVisible(true);
+				 }
+			}
+		});
+		btnVisualizarComandas.addMouseListener(new MouseAdapter() {	//evento de mouse
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				VisualizarComandas visComandas = new VisualizarComandas(listaComandas);	//abri pagina para visualizar comandas
 				visComandas.setVisible(true);
 			}
 		});
-		btnGerarRelatorio.setFont(new Font("Tahoma", Font.BOLD, 15));
-		btnGerarRelatorio.setBounds(200, 171, 200, 40);
-		frmSistemaDeGestao.getContentPane().add(btnGerarRelatorio);
+		btnVisualizarComandas.setFont(new Font("Tahoma", Font.BOLD, 15));
+		btnVisualizarComandas.setBounds(200, 171, 200, 40);
+		frmSistemaDeGestao.getContentPane().add(btnVisualizarComandas);
 		
+		//Criando botão para janela AdicionarProduto
 		JButton btnAdicionarProduto = new JButton("Adicionar Produto");
-		btnAdicionarProduto.addMouseListener(new MouseAdapter() {
+		btnAdicionarProduto.addKeyListener(new KeyAdapter() {	//evento de teclado
+			@Override
+			public void keyPressed(KeyEvent e) {
+				 if (e.getKeyCode()==KeyEvent.VK_ENTER){	//caso enter seja pressionado
+					 AdicionarProduto adcProduto = new AdicionarProduto(listaProdutos);	//abri pagina para adicionar produto
+					 adcProduto.setVisible(true);
+				 }
+			}
+		});
+		btnAdicionarProduto.addMouseListener(new MouseAdapter() {	//evento de mouse
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				AdicionarProduto adcProduto = new AdicionarProduto(listaProdutos);	//abri pagina para adicionar produto
@@ -92,8 +138,20 @@ public class PaginaInicial {
 		btnAdicionarProduto.setBounds(200, 222, 200, 40);
 		frmSistemaDeGestao.getContentPane().add(btnAdicionarProduto);
 		
+		//Criando botão para janela Atualizar Preço
 		JButton btnAtualizarPreco = new JButton("Atualizar Pre\u00E7o");
-		btnAtualizarPreco.addMouseListener(new MouseAdapter() {
+		btnAtualizarPreco.addKeyListener(new KeyAdapter() {	//evento de teclado
+			@Override
+			public void keyPressed(KeyEvent e) {
+				 if (e.getKeyCode()==KeyEvent.VK_ENTER){	//caso enter seja pressionado
+					//frmSistemaDeGestao.setVisible(false);	//esconde a pagina inicial
+					AtualizarProduto atuaProduto = new AtualizarProduto(listaProdutos);	//abri pagina para atualizar produto
+					atuaProduto.setVisible(true);
+				 }
+			}
+		});
+			
+		btnAtualizarPreco.addMouseListener(new MouseAdapter() {	//evento de mouse
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				//frmSistemaDeGestao.setVisible(false);	//esconde a pagina inicial
@@ -105,10 +163,24 @@ public class PaginaInicial {
 		btnAtualizarPreco.setBounds(200, 273, 200, 40);
 		frmSistemaDeGestao.getContentPane().add(btnAtualizarPreco);
 		
+		//criando botão para sair do sistema
 		JButton btnSair = new JButton("Sair");
+		btnSair.addKeyListener(new KeyAdapter() {	//evento de teclado
+			@Override
+			public void keyPressed(KeyEvent e) {
+				 if (e.getKeyCode()==KeyEvent.VK_ENTER){	//caso enter seja pressionado
+					DadosProdutos salvar = new DadosProdutos(listaProdutos);
+					salvar.salvarDados();
+					
+					DadosComandas carregarComandas = new DadosComandas(listaComandas);
+					carregarComandas.salvarDados();
+					System.exit(0);
+				 }
+			}
+		});
 		btnSair.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent e) {
+			public void mouseClicked(MouseEvent e) {	//evento de mouse
 				DadosProdutos salvar = new DadosProdutos(listaProdutos);
 				salvar.salvarDados();
 				
@@ -121,12 +193,14 @@ public class PaginaInicial {
 		btnSair.setBounds(200, 324, 200, 40);
 		frmSistemaDeGestao.getContentPane().add(btnSair);
 		
-		JButton btnVisualizarComanda = new JButton("Visualizar Comanda");
-		btnVisualizarComanda.setFont(new Font("Tahoma", Font.BOLD, 15));
-		btnVisualizarComanda.setBounds(200, 222, 200, 40);
-		frmSistemaDeGestao.getContentPane().add(btnVisualizarComanda);
+		
 	}
 	
+	/**
+	 * Método que gera, a partir dos objetos Produto lidos em arquivo, uma lista de objetos
+	 * ProdutoComanda que são necessários para a criação do objeto comanda. A lista gerada será
+	 * um modelo para as novas comandas criadas
+	 */
 	public void gerarListaProdutoComanda(){
 		for(Produto aux :this.listaProdutos){
 			ProdutoComanda novoProdutoComanda = new ProdutoComanda(aux);
@@ -134,6 +208,11 @@ public class PaginaInicial {
 		}
 	}
 	
+	/**
+	 * Método que duplica a lista de ProdutoComanda, essa nova lista é necessaria,
+	 * pois cada comanda possui valores diferentes destes objetos. 
+	 * @return lista de ProdutoComanda necessária para criação de nova comanda
+	 */
 	public ArrayList<ProdutoComanda> novaListaProdutosComanda(){
 		ArrayList<ProdutoComanda> novaLista = new ArrayList<ProdutoComanda>();
 		for(Produto aux :this.listaProdutos){
@@ -144,6 +223,9 @@ public class PaginaInicial {
 		return novaLista;
 	}
 	
+	/**
+	 *Método que exibe a Página Inicial na tela 
+	 */
 	public void exibirPagina(){
 		this.frmSistemaDeGestao.setVisible(true);
 	}

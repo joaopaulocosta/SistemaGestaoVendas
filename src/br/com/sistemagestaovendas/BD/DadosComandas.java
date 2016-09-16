@@ -13,16 +13,27 @@ import java.util.ArrayList;
 
 import br.com.sistemagestaovendas.vendas.Comanda;
 import br.com.sistemagestaovendas.vendas.Produto;
-
+/**
+ * Classe responsável por armazenar e carregar os dados referentes 
+ * a classe Comanda
+ * @author Joao
+ *
+ */
 public class DadosComandas {
 	
 	private ArrayList<Comanda> listaComandas;
 	
+	/**
+	 * Construtor que recebe a lista de comandas que serão tratadas
+	 * @param listaComandas
+	 */
 	public DadosComandas(ArrayList<Comanda> listaComandas){
 		this.listaComandas = listaComandas;
 	}
 	
-	//função que ira importar dados binarios de arquivo ao iniciar o programa
+	/**
+	 * função que ira importar dados binarios de arquivo ao iniciar o programa
+	 */
 	public void carregarDados(){
 		try {
 			File file = new File( "comandas.bin" );
@@ -47,7 +58,9 @@ public class DadosComandas {
 		}
 	}
 	
-	//função que ira salvar os dados de produtos antes de sair da aplicação
+	/**
+	 * função que ira salvar os dados de produtos antes de sair da aplicação
+	 */
 	public void salvarDados(){
 		try {
 				File file = new File( "comandas.bin" );
