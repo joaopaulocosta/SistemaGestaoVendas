@@ -161,7 +161,7 @@ public class LancarComanda extends JDialog {
 				public void focusLost(FocusEvent arg0) {
 					ProdutoComanda ref = null;
 					for(ProdutoComanda aux: listaProdutosComanda){
-						if(aux.getProduto().getNome().equals("Refeição")){
+						if(aux.getNome().equals("Refeição")){
 							aux.setQuantidade(aux.getQuantidade() + 1);
 							ref = aux;
 						}
@@ -172,7 +172,7 @@ public class LancarComanda extends JDialog {
 						valorTotal += Float.parseFloat(txtRefeicao.getText());
 						lblValorTotalReal.setText("R$ " + df.format(valorTotal));
 						//criando nova refeicao
-						Refeicao novaRefeicao = new Refeicao(ref.getProduto(), Float.parseFloat(txtRefeicao.getText()) );
+						Refeicao novaRefeicao = new Refeicao(ref, Float.parseFloat(txtRefeicao.getText()) );
 						//adicionando refeicao a nova comanda
 						novaComanda.addRefeicao(novaRefeicao);
 					}
@@ -424,7 +424,7 @@ public class LancarComanda extends JDialog {
 			public void focusLost(FocusEvent arg0) {
 				ProdutoComanda out = null;
 				for(ProdutoComanda aux: listaProdutosComanda){
-					if(aux.getProduto().getNome().equals("Outros")){
+					if(aux.getNome().equals("Outros")){
 						aux.setQuantidade(aux.getQuantidade() + 1);
 						out = aux;
 					}
@@ -462,7 +462,7 @@ public class LancarComanda extends JDialog {
 					dispose();
 				}
 			});
-			button.setBounds(149, 582, 152, 48);
+			button.setBounds(41, 582, 152, 48);
 			contentPanel.add(button);
 		}
 		{
@@ -500,7 +500,7 @@ public class LancarComanda extends JDialog {
 					}
 				}
 			});
-			btRegistrar.setBounds(311, 582, 152, 48);
+			btRegistrar.setBounds(402, 582, 152, 48);
 			contentPanel.add(btRegistrar);
 		}
 		
@@ -671,10 +671,10 @@ public class LancarComanda extends JDialog {
 		if(!flagLost){
 			if(!campo.getText().equals("")){
 				for(ProdutoComanda aux: listaProdutosComanda){
-					if(aux.getProduto().getNome().equals(nomeProduto)){
+					if(aux.getNome().equals(nomeProduto)){
 							
 						valorTotal -= (Integer.parseInt(campo.getText()) 
-								* aux.getProduto().getPrecoFixo());
+								* aux.getPrecoFixo());
 						lblValorTotalReal.setText("R$ " +  df.format(valorTotal));
 						campo.setText("");
 						aux.setQuantidade(0); 
@@ -685,13 +685,14 @@ public class LancarComanda extends JDialog {
 		//trata evento lost focus
 		else{
 				for(ProdutoComanda aux: listaProdutosComanda){
-					if(aux.getProduto().getNome().equals(nomeProduto)){
+					if(aux.getNome().equals(nomeProduto)){
 							try{
 								valorTotal += (Integer.parseInt(campo.getText()) 
-										* aux.getProduto().getPrecoFixo());
+										* aux.getPrecoFixo());
 								lblValorTotalReal.setText("R$ " + df.format(valorTotal));
 								aux.setQuantidade(Integer.parseInt(campo.getText()));	//soma quantidade
-					
+								
+								
 							}catch(Exception ex){
 								if(!campo.getText().equals("")){
 									lblAlerta.setText("Apenas valores inteiros para este campo");

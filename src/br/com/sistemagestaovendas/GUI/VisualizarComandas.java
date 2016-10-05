@@ -173,7 +173,7 @@ public class VisualizarComandas extends JDialog {
 				dispose();
 			}
 		});
-		button.setBounds(359, 527, 152, 48);
+		button.setBounds(113, 527, 152, 48);
 		contentPanel.add(button);
 		
 		//inserindo barra de rolagem vertical na tabela
@@ -306,7 +306,7 @@ public class VisualizarComandas extends JDialog {
 		});
 		btnNovaVisualizao.addFocusListener(new FocusAdapter() {
 		});
-		btnNovaVisualizao.setBounds(521, 527, 152, 48);
+		btnNovaVisualizao.setBounds(804, 527, 152, 48);
 		contentPanel.add(btnNovaVisualizao);
 		
 		JLabel lblNComandas = new JLabel("N\u00B0 de Comandas an\u00E1lisadas: ");

@@ -18,18 +18,23 @@ import br.com.sistemagestaovendas.vendas.Produto;
 /**
  * Classe responsável por armazenar e carregar os dados referentes 
  * a classe Produto
- * @author Joao-
+ * @author Joao
  *
  */
 public class DadosProdutos {
 	
 	private ArrayList<Produto> listaProdutos;
+	private String nomeArquivo;
 	
 	/**
 	 * Construtor que recebe a lista de produtos que serão tratados
 	 * @param listaComandas
 	 */
-	public DadosProdutos(ArrayList<Produto> listaProdutos){
+	public DadosProdutos(ArrayList<Produto> listaProdutos, String nome){
+		if(nome == null)
+			this.nomeArquivo = "produtos.bin";
+		else
+			this.nomeArquivo = nome;
 		this.listaProdutos = listaProdutos;
 	}
 	
@@ -38,10 +43,9 @@ public class DadosProdutos {
 	 */
 	public void carregarDados(){
 		try {
-			File file = new File( "produtos.bin" );
+			File file = new File( this.nomeArquivo );
 			FileInputStream in = new FileInputStream( file );
 			ObjectInput objectIn = new ObjectInputStream( in );
-			
 			//lendo produtos de arquivo binario
 			int tam = objectIn.readInt();
 			for(int i = 0; i< tam; i++){
@@ -65,7 +69,7 @@ public class DadosProdutos {
 	 */
 	public void salvarDados(){
 		try {
-				File file = new File( "produtos.bin" );
+				File file = new File( this.nomeArquivo );
 				FileOutputStream out = new FileOutputStream( file );
 				ObjectOutput objectOut = new ObjectOutputStream( out );
 				

@@ -19,7 +19,7 @@ public class ProdutoComanda extends Produto implements Serializable{
 	 * @param produto
 	 */
 	public ProdutoComanda(String nome, float preco){
-		this.produto = produto;
+		super(nome,preco);
 		this.quantidade = 0;
 	}
 	
@@ -39,12 +39,5 @@ public class ProdutoComanda extends Produto implements Serializable{
 		return this.quantidade;
 	}
 	
-	/**
-	 * Retorna o produto que foi inserido na criação da classe
-	 * @return produto
-	 */
-	public Produto getProduto(){
-		return produto;
-	}
 	
 }

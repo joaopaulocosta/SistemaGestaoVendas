@@ -21,13 +21,19 @@ import br.com.sistemagestaovendas.vendas.Produto;
  */
 public class DadosComandas {
 	
+	private String nomeArquivo;
 	private ArrayList<Comanda> listaComandas;
 	
 	/**
 	 * Construtor que recebe a lista de comandas que serão tratadas
 	 * @param listaComandas ArrayList com comandas que serão armazenadas ou carregadas
 	 */
-	public DadosComandas(ArrayList<Comanda> listaComandas){
+	public DadosComandas(ArrayList<Comanda> listaComandas, String nome){
+		if(nome == null)
+			this.nomeArquivo = "comandas.bin";
+		else
+			this.nomeArquivo = nome;
+			
 		this.listaComandas = listaComandas;
 	}
 	
@@ -36,7 +42,7 @@ public class DadosComandas {
 	 */
 	public void carregarDados(){
 		try {
-			File file = new File( "comandas.bin" );
+			File file = new File( this.nomeArquivo );
 			FileInputStream in = new FileInputStream( file );
 			ObjectInput objectIn = new ObjectInputStream( in );
 			
@@ -63,7 +69,7 @@ public class DadosComandas {
 	 */
 	public void salvarDados(){
 		try {
-				File file = new File( "comandas.bin" );
+				File file = new File( this.nomeArquivo );
 				FileOutputStream out = new FileOutputStream( file );
 				ObjectOutput objectOut = new ObjectOutputStream( out );
 				

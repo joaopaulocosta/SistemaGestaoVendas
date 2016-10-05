@@ -8,6 +8,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
@@ -40,10 +44,10 @@ public class PaginaInicial {
 	 *  leitura dos produtos em arquivo e leitura das comandas em arquivo.
 	 */
 	public PaginaInicial() {
-		initialize();
-		DadosProdutos carregarProdutos = new DadosProdutos(this.listaProdutos);
+		inicializar();
+		DadosProdutos carregarProdutos = new DadosProdutos(this.listaProdutos, "produtos.bin");
 		carregarProdutos.carregarDados();
-		DadosComandas carregarComandas = new DadosComandas(this.listaComandas);
+		DadosComandas carregarComandas = new DadosComandas(this.listaComandas, "comandas.bin");
 		carregarComandas.carregarDados();
 	}
 
@@ -51,7 +55,7 @@ public class PaginaInicial {
 	 * Método que cria todos os componentes visuais que serão exibidos na tela, e
 	 * implementa os eventos necessários para o funcionamento do programa
 	 */
-	private void initialize() {
+	private void inicializar() {
 		//Inicializando o frame da tela Inicial
 		frmSistemaDeGestao = new JFrame();
 		frmSistemaDeGestao.setTitle("Sistema de Gest\u00E3o de Vendas");
@@ -63,16 +67,17 @@ public class PaginaInicial {
 		frmSistemaDeGestao.addWindowListener(new java.awt.event.WindowAdapter() {
 		    @Override
 		    public void windowClosing(java.awt.event.WindowEvent windowEvent) {
-		    	DadosProdutos salvar = new DadosProdutos(listaProdutos);
+		    	DadosProdutos salvar = new DadosProdutos(listaProdutos, "produtos.bin");
 				salvar.salvarDados();
 				
-				DadosComandas carregarComandas = new DadosComandas(listaComandas);
+				DadosComandas carregarComandas = new DadosComandas(listaComandas, "comandas.bin");
 				carregarComandas.salvarDados();
+				destruirArquivoDeExecucao();
 				System.exit(0);
 		    }
 		});
 		//Titulo Principal
-		JLabel labelTitulo = new JLabel("Sistema de Gest\u00E3o de Vendas");
+		JLabel labelTitulo = new JLabel("Sistema de Registro de Vendas");
 		labelTitulo.setBounds(-11, 11, 607, 71);
 		labelTitulo.setHorizontalAlignment(SwingConstants.CENTER);
 		//Inserindo o ícone da tela
@@ -181,10 +186,10 @@ public class PaginaInicial {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				 if (e.getKeyCode()==KeyEvent.VK_ENTER){	//caso enter seja pressionado
-					DadosProdutos salvar = new DadosProdutos(listaProdutos);
+					DadosProdutos salvar = new DadosProdutos(listaProdutos, "produtos.bin");
 					salvar.salvarDados();
 					
-					DadosComandas carregarComandas = new DadosComandas(listaComandas);
+					DadosComandas carregarComandas = new DadosComandas(listaComandas, "comandas.bin");
 					carregarComandas.salvarDados();
 					System.exit(0);
 				 }
@@ -193,11 +198,12 @@ public class PaginaInicial {
 		btnSair.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {	//evento de mouse
-				DadosProdutos salvar = new DadosProdutos(listaProdutos);
+				DadosProdutos salvar = new DadosProdutos(listaProdutos, "produtos.bin");
 				salvar.salvarDados();
 				
-				DadosComandas carregarComandas = new DadosComandas(listaComandas);
+				DadosComandas carregarComandas = new DadosComandas(listaComandas, "comandas.bin");
 				carregarComandas.salvarDados();
+				destruirArquivoDeExecucao();
 				System.exit(0);
 			}
 		});
@@ -215,7 +221,7 @@ public class PaginaInicial {
 	 */
 	public void gerarListaProdutoComanda(){
 		for(Produto aux :this.listaProdutos){
-			ProdutoComanda novoProdutoComanda = new ProdutoComanda(aux);
+			ProdutoComanda novoProdutoComanda = new ProdutoComanda(aux.getNome(),aux.getPrecoFixo());
 			listaProdutosComanda.add(novoProdutoComanda);
 		}
 	}
@@ -228,7 +234,7 @@ public class PaginaInicial {
 	public ArrayList<ProdutoComanda> novaListaProdutosComanda(){
 		ArrayList<ProdutoComanda> novaLista = new ArrayList<ProdutoComanda>();
 		for(Produto aux :this.listaProdutos){
-			ProdutoComanda novoProdutoComanda = new ProdutoComanda(aux);
+			ProdutoComanda novoProdutoComanda = new ProdutoComanda(aux.getNome(),aux.getPrecoFixo());
 			novaLista.add(novoProdutoComanda);
 		}
 		
@@ -240,5 +246,19 @@ public class PaginaInicial {
 	 */
 	public void exibirPagina(){
 		this.frmSistemaDeGestao.setVisible(true);
+	}
+	
+	
+	public void destruirArquivoDeExecucao(){
+		try {
+			File file = new File("executando.bin" );
+			FileOutputStream out = new FileOutputStream( file );
+			ObjectOutput objectOut = new ObjectOutputStream( out );
+			objectOut. close();
+			out. close();
+			file.delete();
+		} catch (Exception e) {
+			System.out.println( "Erro ao deletar arquivo. " + e.getMessage() );
+		}
 	}
 }

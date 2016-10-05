@@ -138,7 +138,7 @@ public class Comanda implements Serializable {
 	public int getQuantidadeProdutoNome(String nome){
 		int quant = 0;
 		for(ProdutoComanda aux: this.listaProdutos){
-			if(aux.getProduto().getNome().equals(nome)){
+			if(aux.getNome().equals(nome)){
 				quant = aux.getQuantidade();	
 			}
 		}

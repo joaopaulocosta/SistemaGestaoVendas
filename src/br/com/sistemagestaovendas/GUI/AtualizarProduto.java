@@ -131,7 +131,7 @@ public class AtualizarProduto extends JDialog {
 				dispose();	//fechando janela
 			}
 		});
-		btnRetornar.setBounds(120, 281, 152, 48);
+		btnRetornar.setBounds(108, 281, 152, 48);
 		contentPanel.add(btnRetornar);
 		
 		JLabel lblAlerta = new JLabel("O valor informado n\u00E3o pode estar em branco");
@@ -170,7 +170,7 @@ public class AtualizarProduto extends JDialog {
 				}
 			}
 		});
-		btnAtualizar.setBounds(282, 281, 152, 48);
+		btnAtualizar.setBounds(330, 281, 152, 48);
 		contentPanel.add(btnAtualizar);
 		setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{comboBox, txtNovoPreco, btnAtualizar, btnRetornar}));
 		

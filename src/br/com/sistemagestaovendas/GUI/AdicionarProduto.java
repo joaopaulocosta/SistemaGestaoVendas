@@ -95,7 +95,7 @@ public class AdicionarProduto extends JDialog {
 				dispose();	//fechando janela
 			}
 		});
-		btnRetornar.setBounds(120, 281, 152, 48);
+		btnRetornar.setBounds(93, 281, 152, 48);
 		contentPanel.add(btnRetornar);
 		
 		//label para alerta caso haja alguma valor fora do padrão
@@ -129,7 +129,7 @@ public class AdicionarProduto extends JDialog {
 				}
 			}
 		});
-		btnAdicionar.setBounds(282, 281, 152, 48);
+		btnAdicionar.setBounds(315, 281, 152, 48);
 		contentPanel.add(btnAdicionar);
 		setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtNome, txtPreco, btnAdicionar, btnRetornar}));
 		

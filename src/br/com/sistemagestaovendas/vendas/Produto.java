@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class Produto implements Serializable {
 
 	private String nome;	//nome do produto
-	private float precoFixo;	//preço que será calculado pela comanda
+	private Float precoFixo;	//preço que será calculado pela comanda
 	
 	/**
 	 * Construtor da classe que inicializa os valores da classe de acordo
